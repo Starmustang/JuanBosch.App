@@ -1,0 +1,50 @@
+using JuanBosch.App.Dtos.Patient;
+using JuanBosch.App.Models;
+
+namespace JuanBosch.App.Mapper
+{
+    public static class PatientMapper
+    {
+        public static Patient ToCreatePatient(this PatientCreateDto patientCreateDto)
+        {
+            if (patientCreateDto == null)
+            {
+                throw new ArgumentNullException(nameof(patientCreateDto));
+            }
+            return new Patient
+            {
+                PatientName = patientCreateDto.name,
+                PatientLastName = patientCreateDto.lastName,
+                PatientIdCard = patientCreateDto.idCard,
+                PatientPassport = patientCreateDto.passport,
+                PatientPhone = patientCreateDto.phone,
+                PatientBirthDate = patientCreateDto.dateOfBirth,
+                PatientGender = patientCreateDto.gender,
+                PatientEmail = patientCreateDto.email,
+                AddressId = patientCreateDto.addressId,
+                // PatientDirection = patientCreateDto.PatientDirection
+            };
+        }
+        public static PatientReadDto ToReadPatient(this Patient patient)
+        {
+            if (patient == null)
+            {
+                throw new ArgumentNullException(nameof(patient));
+            }
+            return new PatientReadDto
+            {
+                id = patient.PatientId,
+                name = patient.PatientName,
+                lastName = patient.PatientLastName,
+                idCard = patient.PatientIdCard,
+                passport = patient.PatientPassport,
+                phone = patient.PatientPhone,
+                dateOfBirth = patient.PatientBirthDate.Value,
+                gender = patient.PatientGender,
+                email = patient.PatientEmail,
+                addressId = patient.AddressId.Value,
+                // PatientDirection = patient.PatientDirection
+            };
+        }
+    }
+}

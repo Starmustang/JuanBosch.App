@@ -11,5 +11,7 @@ namespace JuanBosch.App.Models.Address
         public int MunicipalityId { get; set; }
         [ForeignKey("MunicipalityId")]
         public Municipality? Municipality { get; set; }
+
+        public ICollection<PatientDirection> PatientDirections { get; set; }
     }
 }
