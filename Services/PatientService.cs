@@ -48,7 +48,7 @@ namespace JuanBosch.App.Services
             existingPatient.PatientGender = patient.gender;
             existingPatient.PatientEmail = patient.email;
             existingPatient.AddressId = patient.addressId;
-            // existingPatient.PatientDirection = patient.PatientDirection;
+            existingPatient.PatientDirection = patient.PatientDirection;
             await _context.SaveChangesAsync();
             return patient;
         }

@@ -14,7 +14,7 @@ namespace JuanBosch.App.Dtos.Patient
         
         public DateOnly dateOfBirth { get; set; }
         public int addressId { get; set; }
-        // public PatientDirection? PatientDirection { get; set; }
+        public PatientDirection? PatientDirection { get; set; }
 
     }
 

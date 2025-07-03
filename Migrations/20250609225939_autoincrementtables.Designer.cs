@@ -4,6 +4,7 @@ using JuanBosch.App.Models.DataContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JuanBosch.App.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20250609225939_autoincrementtables")]
+    partial class autoincrementtables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,22 +35,19 @@ namespace JuanBosch.App.Migrations
 
                     b.Property<string>("CountryCurrency")
                         .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("varchar(10)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("CountryLanguage")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("CountryName")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)");
+                        .HasColumnType("longtext");
 
                     b.HasKey("CountryId");
 
-                    b.ToTable("Countries", (string)null);
+                    b.ToTable("Countries");
                 });
 
             modelBuilder.Entity("JuanBosch.App.Models.Address.Municipality", b =>
@@ -60,22 +60,16 @@ namespace JuanBosch.App.Migrations
 
                     b.Property<string>("MunicipalityName")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)");
+                        .HasColumnType("longtext");
 
                     b.Property<int>("ProvinceId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ProvinceId1")
                         .HasColumnType("int");
 
                     b.HasKey("MunicipalityId");
 
                     b.HasIndex("ProvinceId");
 
-                    b.HasIndex("ProvinceId1");
-
-                    b.ToTable("Municipalities", (string)null);
+                    b.ToTable("Municipalities");
                 });
 
             modelBuilder.Entity("JuanBosch.App.Models.Address.Province", b =>
@@ -91,14 +85,13 @@ namespace JuanBosch.App.Migrations
 
                     b.Property<string>("ProvinceName")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)");
+                        .HasColumnType("longtext");
 
                     b.HasKey("ProvinceId");
 
                     b.HasIndex("CountryId");
 
-                    b.ToTable("Provinces", (string)null);
+                    b.ToTable("Provinces");
                 });
 
             modelBuilder.Entity("JuanBosch.App.Models.Address.Sector", b =>
@@ -112,21 +105,15 @@ namespace JuanBosch.App.Migrations
                     b.Property<int>("MunicipalityId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("MunicipalityId1")
-                        .HasColumnType("int");
-
                     b.Property<string>("SectorName")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)");
+                        .HasColumnType("longtext");
 
                     b.HasKey("SectorId");
 
                     b.HasIndex("MunicipalityId");
 
-                    b.HasIndex("MunicipalityId1");
-
-                    b.ToTable("Sectors", (string)null);
+                    b.ToTable("Sectors");
                 });
 
             modelBuilder.Entity("JuanBosch.App.Models.Patient", b =>
@@ -144,50 +131,34 @@ namespace JuanBosch.App.Migrations
                         .HasColumnType("date");
 
                     b.Property<string>("PatientEmail")
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("PatientGender")
-                        .HasMaxLength(20)
-                        .HasColumnType("varchar(20)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("PatientIdCard")
-                        .HasMaxLength(30)
-                        .HasColumnType("varchar(30)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("PatientLastName")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("PatientName")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("PatientPassport")
-                        .HasMaxLength(20)
-                        .HasColumnType("varchar(20)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("PatientPhone")
-                        .HasMaxLength(20)
-                        .HasColumnType("varchar(20)");
+                        .HasColumnType("longtext");
 
                     b.HasKey("PatientId");
 
                     b.HasIndex("AddressId")
                         .IsUnique();
 
-                    b.HasIndex("PatientEmail");
-
-                    b.HasIndex("PatientIdCard");
-
-                    b.HasIndex("PatientPassport");
-
-                    b.ToTable("Patients", null, t =>
-                        {
-                            t.HasCheckConstraint("CK_Patient_Identification", "PatientIdCard IS NOT NULL OR PatientPassport IS NOT NULL");
-                        });
+                    b.ToTable("Patients");
                 });
 
             modelBuilder.Entity("JuanBosch.App.Models.PatientDirection", b =>
@@ -200,13 +171,11 @@ namespace JuanBosch.App.Migrations
 
                     b.Property<string>("HouseNumber")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("varchar(20)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("HouseStreet")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("varchar(200)");
+                        .HasColumnType("longtext");
 
                     b.Property<int>("SectorId")
                         .HasColumnType("int");
@@ -215,7 +184,7 @@ namespace JuanBosch.App.Migrations
 
                     b.HasIndex("SectorId");
 
-                    b.ToTable("PatientDirections", (string)null);
+                    b.ToTable("PatientDirections");
                 });
 
             modelBuilder.Entity("JuanBosch.App.Models.Address.Municipality", b =>
@@ -226,17 +195,13 @@ namespace JuanBosch.App.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("JuanBosch.App.Models.Address.Province", null)
-                        .WithMany("Municipalities")
-                        .HasForeignKey("ProvinceId1");
-
                     b.Navigation("Province");
                 });
 
             modelBuilder.Entity("JuanBosch.App.Models.Address.Province", b =>
                 {
                     b.HasOne("JuanBosch.App.Models.Address.Country", "Country")
-                        .WithMany("Provinces")
+                        .WithMany()
                         .HasForeignKey("CountryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -252,10 +217,6 @@ namespace JuanBosch.App.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("JuanBosch.App.Models.Address.Municipality", null)
-                        .WithMany("Sectors")
-                        .HasForeignKey("MunicipalityId1");
-
                     b.Navigation("Municipality");
                 });
 
@@ -263,8 +224,7 @@ namespace JuanBosch.App.Migrations
                 {
                     b.HasOne("JuanBosch.App.Models.PatientDirection", "PatientDirection")
                         .WithOne("Patient")
-                        .HasForeignKey("JuanBosch.App.Models.Patient", "AddressId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("JuanBosch.App.Models.Patient", "AddressId");
 
                     b.Navigation("PatientDirection");
                 });
@@ -274,25 +234,10 @@ namespace JuanBosch.App.Migrations
                     b.HasOne("JuanBosch.App.Models.Address.Sector", "Sector")
                         .WithMany("PatientDirections")
                         .HasForeignKey("SectorId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Sector");
-                });
-
-            modelBuilder.Entity("JuanBosch.App.Models.Address.Country", b =>
-                {
-                    b.Navigation("Provinces");
-                });
-
-            modelBuilder.Entity("JuanBosch.App.Models.Address.Municipality", b =>
-                {
-                    b.Navigation("Sectors");
-                });
-
-            modelBuilder.Entity("JuanBosch.App.Models.Address.Province", b =>
-                {
-                    b.Navigation("Municipalities");
                 });
 
             modelBuilder.Entity("JuanBosch.App.Models.Address.Sector", b =>

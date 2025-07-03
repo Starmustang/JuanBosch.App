@@ -22,7 +22,7 @@ namespace JuanBosch.App.Mapper
                 PatientGender = patientCreateDto.gender,
                 PatientEmail = patientCreateDto.email,
                 AddressId = patientCreateDto.addressId,
-                // PatientDirection = patientCreateDto.PatientDirection
+                PatientDirection = patientCreateDto.PatientDirection
             };
         }
         public static PatientReadDto ToReadPatient(this Patient patient)
@@ -43,7 +43,7 @@ namespace JuanBosch.App.Mapper
                 gender = patient.PatientGender,
                 email = patient.PatientEmail,
                 addressId = patient.AddressId.Value,
-                // PatientDirection = patient.PatientDirection
+                PatientDirection = patient.PatientDirection
             };
         }
     }

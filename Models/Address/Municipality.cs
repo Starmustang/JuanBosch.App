@@ -1,15 +1,11 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
 namespace JuanBosch.App.Models.Address
 {
     public class Municipality
     {
-        [Key]
         public int MunicipalityId { get; set; }
-        public string MunicipalityName { get; set; }
+        public string MunicipalityName { get; set; } = string.Empty;
         public int ProvinceId { get; set; }
-        [ForeignKey("ProvinceId")]
         public Province? Province { get; set; }
+        public ICollection<Sector> Sectors { get; set; } = new List<Sector>();
     }
 }
