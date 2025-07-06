@@ -1,5 +1,6 @@
 using JuanBosch.App.Dtos.Patient;
 using JuanBosch.App.Mapper;
+using JuanBosch.App.Models;
 using JuanBosch.App.Models.DataContext;
 using JuanBosch.App.Services.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -47,8 +48,21 @@ namespace JuanBosch.App.Services
             existingPatient.PatientBirthDate = patient.dateOfBirth;
             existingPatient.PatientGender = patient.gender;
             existingPatient.PatientEmail = patient.email;
-            existingPatient.AddressId = patient.addressId;
-            existingPatient.PatientDirection = patient.PatientDirection;
+            
+            if (patient.Address != null)
+            {
+                existingPatient.AddressId = patient.Address.AddressId;
+                
+                if (existingPatient.PatientDirection == null)
+                {
+                    existingPatient.PatientDirection = new PatientDirection();
+                }
+                
+                existingPatient.PatientDirection.SectorId = patient.Address.SectorId ?? 0;
+                existingPatient.PatientDirection.MunicipalityId = patient.Address.MunicipalityId ?? 0;
+                existingPatient.PatientDirection.ProvinceId = patient.Address.ProvinceId ?? 0;
+                existingPatient.PatientDirection.CountryId = patient.Address.CountryId ?? 0;
+            }
             await _context.SaveChangesAsync();
             return patient;
         }

@@ -21,8 +21,14 @@ namespace JuanBosch.App.Mapper
                 PatientBirthDate = patientCreateDto.dateOfBirth,
                 PatientGender = patientCreateDto.gender,
                 PatientEmail = patientCreateDto.email,
-                AddressId = patientCreateDto.addressId,
-                PatientDirection = patientCreateDto.PatientDirection
+                AddressId = patientCreateDto.Address?.AddressId,
+                PatientDirection = patientCreateDto.Address != null ? new PatientDirection
+                {
+                    SectorId = patientCreateDto.Address.SectorId ?? 0,
+                    MunicipalityId = patientCreateDto.Address.MunicipalityId ?? 0,
+                    ProvinceId = patientCreateDto.Address.ProvinceId ?? 0,
+                    CountryId = patientCreateDto.Address.CountryId ?? 0
+                } : null
             };
         }
         public static PatientReadDto ToReadPatient(this Patient patient)
@@ -42,8 +48,14 @@ namespace JuanBosch.App.Mapper
                 dateOfBirth = patient.PatientBirthDate.Value,
                 gender = patient.PatientGender,
                 email = patient.PatientEmail,
-                addressId = patient.AddressId.Value,
-                PatientDirection = patient.PatientDirection
+                Address = new AddressDto
+                {
+                    AddressId = patient.AddressId,
+                    SectorId = patient.PatientDirection?.SectorId,
+                    MunicipalityId = patient.PatientDirection?.MunicipalityId,
+                    ProvinceId = patient.PatientDirection?.ProvinceId,
+                    CountryId = patient.PatientDirection?.CountryId
+                }
             };
         }
     }
