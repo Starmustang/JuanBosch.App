@@ -4,6 +4,7 @@ using JuanBosch.App.Models.DataContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JuanBosch.App.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20250706235039_medicEvaluationBloodArsPlan")]
+    partial class medicEvaluationBloodArsPlan
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -166,27 +169,6 @@ namespace JuanBosch.App.Migrations
                     b.HasKey("ArsPlansEnsuranceId");
 
                     b.ToTable("ArsPlans", (string)null);
-                });
-
-            modelBuilder.Entity("JuanBosch.App.Models.Blood.Blood", b =>
-                {
-                    b.Property<int>("BloodId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("BloodId"));
-
-                    b.Property<string>("BloodType")
-                        .IsRequired()
-                        .HasMaxLength(25)
-                        .HasColumnType("varchar(25)");
-
-                    b.Property<bool>("ConsentBlood")
-                        .HasColumnType("tinyint(1)");
-
-                    b.HasKey("BloodId");
-
-                    b.ToTable("Blood", (string)null);
                 });
 
             modelBuilder.Entity("JuanBosch.App.Models.MedicEvaluation.MedicEvaluation", b =>
