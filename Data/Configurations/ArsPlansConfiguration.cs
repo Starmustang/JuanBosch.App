@@ -10,8 +10,8 @@ namespace JuanBosch.App.Data.Configurations
         {
             builder.ToTable("ArsPlans");
 
-            builder.HasKey(a => a.ArsPlansEnsuranceId);
-            builder.Property(a => a.ArsPlansEnsuranceId)
+            builder.HasKey(a => a.ArsPlansId);
+            builder.Property(a => a.ArsPlansId)
             .ValueGeneratedOnAdd();
 
             builder.Property(a => a.AfiliationNumberArs)
