@@ -35,6 +35,11 @@ namespace JuanBosch.App.Data.Configurations
             builder.Property(a => a.MaxLimitArs)
             .HasMaxLength(25)
             .IsRequired();
+
+            builder.HasOne(a => a.ArsEnsurance)
+            .WithMany(p => p.Plans)
+            .HasForeignKey(p => p.ArsEnsuranceId)
+            .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

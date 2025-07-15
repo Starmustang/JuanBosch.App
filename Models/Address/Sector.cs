@@ -7,5 +7,6 @@ namespace JuanBosch.App.Models.Address
         public int MunicipalityId { get; set; }
         public Municipality? Municipality { get; set; }
         public ICollection<PatientDirection> PatientDirections { get; set; } = new List<PatientDirection>();
+        public ICollection<DoctorAddress> DoctorAddresses { get; set; } = new List<DoctorAddress>();
     }
 }
