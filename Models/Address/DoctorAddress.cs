@@ -1,3 +1,5 @@
+using JuanBosch.App.Models.Doctor;
+
 namespace JuanBosch.App.Models.Address
 {
     public class DoctorAddress
@@ -7,5 +9,6 @@ namespace JuanBosch.App.Models.Address
         public required string DoctorStreet { get; set; }
         public int SectorId { get; set; }
         public required Sector Sector { get; set; }
+        public ICollection<DoctorMedic> Doctors { get; set; } = new List<DoctorMedic>();
     }
 }
