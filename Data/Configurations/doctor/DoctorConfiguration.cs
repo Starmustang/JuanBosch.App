@@ -12,7 +12,7 @@ namespace JuanBosch.App.Data.Configurations.Doctor
             builder.HasKey(d => d.DoctorId);
             builder.Property(d => d.DoctorId)
             .ValueGeneratedOnAdd();
-            
+
             builder.Property(d => d.DoctorName)
             .IsRequired()
             .HasMaxLength(25);
@@ -24,6 +24,7 @@ namespace JuanBosch.App.Data.Configurations.Doctor
             builder.Property(d => d.DoctorPhone)
             .IsRequired()
             .HasMaxLength(16);
+            
             builder.Property(d => d.DoctorEmail)
             .IsRequired()
             .HasMaxLength(55);

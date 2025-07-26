@@ -1,5 +1,6 @@
 using JuanBosch.App.Dtos.Patient;
 using JuanBosch.App.Models;
+using JuanBosch.App.Models.Patients;
 
 namespace JuanBosch.App.Mapper
 {

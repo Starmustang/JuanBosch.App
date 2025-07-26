@@ -1,4 +1,4 @@
-using JuanBosch.App.Models.Blood;
+using JuanBosch.App.Models.Bloods;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

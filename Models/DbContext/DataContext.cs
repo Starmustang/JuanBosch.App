@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using JuanBosch.App.Models.Address;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using JuanBosch.App.Models.Patients;
 
 namespace JuanBosch.App.Models.DataContext
 {

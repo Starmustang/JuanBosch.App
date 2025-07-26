@@ -46,7 +46,6 @@ namespace JuanBosch.App.Data.Configurations
             .HasForeignKey(p => p.ArsEnsuranceId)
             .OnDelete(DeleteBehavior.Cascade);
 
-
             
         }
     }

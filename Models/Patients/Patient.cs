@@ -1,7 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using JuanBosch.App.Models.Ars;
+using JuanBosch.App.Models.Bloods;
 
-namespace JuanBosch.App.Models
+namespace JuanBosch.App.Models.Patients
 {
     public class Patient
     {
@@ -14,9 +16,15 @@ namespace JuanBosch.App.Models
         public string? PatientGender { get; set; }
         public string? PatientEmail { get; set; }
         public string? PatientPhone { get; set; }
+        public int ArsPlansId { get; set; }
+        public ArsPlans ArsPlans { get; set; }
         public int? AddressId { get; set; }
-        
-        // Navigation property
         public PatientDirection? PatientDirection { get; set; }
+        public string PatientEmergencieContact { get; set; }
+
+        public string PatientFisRecord { get; set; }
+        public int BloodId { get; set; }
+        public Blood Blood { get; set; }
+
     }
 }

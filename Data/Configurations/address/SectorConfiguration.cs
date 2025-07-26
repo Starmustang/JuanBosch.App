@@ -23,17 +23,7 @@ namespace JuanBosch.App.Data.Configurations
             builder.HasOne(s => s.Municipality)
                 .WithMany()
                 .HasForeignKey(s => s.MunicipalityId)
-                .OnDelete(DeleteBehavior.Cascade);
-                
-            builder.HasMany(s => s.PatientDirections)
-                .WithOne(pd => pd.Sector)
-                .HasForeignKey(pd => pd.SectorId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            builder.HasMany(s => s.DoctorAddresses)
-                .WithOne(da => da.Sector)
-                .HasForeignKey(da => da.SectorId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);            
         }
     }
 }

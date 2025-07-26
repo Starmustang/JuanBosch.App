@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using JuanBosch.App.Models;
+using JuanBosch.App.Models.Patients;
 
 namespace JuanBosch.App.Data.Configurations
 {
@@ -28,6 +29,9 @@ namespace JuanBosch.App.Data.Configurations
                 
             builder.Property(p => p.PatientPassport)
                 .HasMaxLength(20);
+
+            builder.Property(p => p.PatientBirthDate);
+                
                 
             builder.Property(p => p.PatientGender)
                 .HasMaxLength(20);
@@ -38,20 +42,33 @@ namespace JuanBosch.App.Data.Configurations
             builder.Property(p => p.PatientPhone)
                 .HasMaxLength(20);
                 
-            // Configure table with check constraint
-            builder.ToTable(t => 
-                t.HasCheckConstraint(
-                    "CK_Patient_Identification",
-                    "PatientIdCard IS NOT NULL OR PatientPassport IS NOT NULL"
-                )
-            );
+            builder.HasOne(p => p.PatientDirection)
+                .WithMany(pd => pd.Patient)
+                .HasForeignKey(pd => pd.AddressId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Property(p => p.PatientEmergencieContact)
+                .HasMaxLength(100);
+            
+            builder.Property(p => p.PatientFisRecord)
+                .HasMaxLength(100);
+
+            builder.HasOne(p => p.ArsPlans)
+                .WithMany(a => a.Patients)
+                .HasForeignKey(p => p.ArsPlansId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(p => p.Blood)
+                .WithMany(b => b.Patients)
+                .HasForeignKey(p => p.BloodId)
+                .OnDelete(DeleteBehavior.Restrict);
+                
                 
             // Indexes for faster lookups
             builder.HasIndex(p => p.PatientIdCard);
             builder.HasIndex(p => p.PatientPassport);
             builder.HasIndex(p => p.PatientEmail);
             
-            // Relationship with PatientDirection is configured in PatientDirectionConfiguration
         }
     }
 }

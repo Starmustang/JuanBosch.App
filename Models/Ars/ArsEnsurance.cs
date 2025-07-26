@@ -14,7 +14,6 @@ namespace JuanBosch.App.Models.Ars
         public string? EnsuranceEmail { get; set; }
         public DateTime EnsuranceUpdateDate { get; set; }
         
-        // Navigation property for the one-to-many relationship
         public ICollection<ArsPlans> Plans { get; set; } = new List<ArsPlans>();
         public TimeOnly EnsuranceSchedule { get; set; }
     }

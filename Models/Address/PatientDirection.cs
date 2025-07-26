@@ -1,4 +1,5 @@
 using JuanBosch.App.Models.Address;
+using JuanBosch.App.Models.Patients;
 
 namespace JuanBosch.App.Models
 {
@@ -15,7 +16,7 @@ namespace JuanBosch.App.Models
         
         // Navigation properties
         public Sector? Sector { get; set; }
-        public Patient? Patient { get; set; }
+        public ICollection<Patient> Patient { get; set; } = new List<Patient>();
         public Municipality? Municipality { get; set; }
         public Province? Province { get; set; }
         public Country? Country { get; set; }
