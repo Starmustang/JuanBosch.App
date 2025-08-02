@@ -1,4 +1,6 @@
-namespace JuanBosch.App.Models.MedicEvaluation
+using JuanBosch.App.Models.Dates;
+
+namespace JuanBosch.App.Models.MedicEvaluations
 {
     public class MedicEvaluation
     {
@@ -11,6 +13,8 @@ namespace JuanBosch.App.Models.MedicEvaluation
         public string OtherInfoEva { get; set; }
         public string HeightEva { get; set; }
         public string PreviousSickNessEva { get; set; }
+        public int DateDoctorId { get; set; }
+        public DateDoctor DateDoctor { get; set; }
 
     }
 }

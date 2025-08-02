@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using JuanBosch.App.Models.Ars;
 using JuanBosch.App.Models.Bloods;
+using JuanBosch.App.Models.Dates;
 
 namespace JuanBosch.App.Models.Patients
 {
@@ -25,6 +26,8 @@ namespace JuanBosch.App.Models.Patients
         public string PatientFisRecord { get; set; }
         public int BloodId { get; set; }
         public Blood Blood { get; set; }
+
+        public ICollection<DateMedic> DateMedics { get; set; } = new List<DateMedic>();
 
     }
 }

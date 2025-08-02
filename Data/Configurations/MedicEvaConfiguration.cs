@@ -1,4 +1,4 @@
-using JuanBosch.App.Models.MedicEvaluation;
+using JuanBosch.App.Models.MedicEvaluations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

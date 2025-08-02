@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using JuanBosch.App.Models.Doctor;
+using JuanBosch.App.Models.Doctors;
 
 namespace JuanBosch.App.Data.Configurations.Doctor
 {

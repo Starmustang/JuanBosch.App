@@ -1,4 +1,4 @@
-using JuanBosch.App.Models.Doctor;
+using JuanBosch.App.Models.Doctors;
 
 namespace JuanBosch.App.Models.Address
 {

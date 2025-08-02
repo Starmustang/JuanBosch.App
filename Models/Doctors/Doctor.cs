@@ -1,6 +1,7 @@
 using JuanBosch.App.Models.Address;
+using JuanBosch.App.Models.Dates;
 
-namespace JuanBosch.App.Models.Doctor
+namespace JuanBosch.App.Models.Doctors
 {
     public class DoctorMedic
     {
@@ -14,6 +15,7 @@ namespace JuanBosch.App.Models.Doctor
         public string DoctorSpeciality { get; set; } = string.Empty;
         public int DoctorAddressId { get; set; }
         public DoctorAddress DoctorAddress { get; set; }
-       public string DoctorExecatur { get; set; }
+        public  string DoctorExecatur { get; set; }
+       public ICollection<DateMedic> DateMedics { get; set; } = new List<DateMedic>();
     }
 }
