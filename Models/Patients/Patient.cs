@@ -4,6 +4,7 @@ using JuanBosch.App.Models.Ars;
 using JuanBosch.App.Models.Bloods;
 using JuanBosch.App.Models.Dates;
 using JuanBosch.App.Models.MedicRecords;
+using JuanBosch.App.Models.PatientsDoctors;
 
 namespace JuanBosch.App.Models.Patients
 {
@@ -30,6 +31,6 @@ namespace JuanBosch.App.Models.Patients
         public MedicRecord MedicRecord { get; set; }   
 
         public ICollection<DateMedic> DateMedics { get; set; } = new List<DateMedic>();
-
+        public ICollection<PatientsDoctor> PatientDoctor { get; set; } = new List<PatientsDoctor>();
     }
 }
