@@ -7,7 +7,7 @@ namespace JuanBosch.App.Models.PatientsDoctors
     {
         public int PatientDoctorId { get; set; }
         public int PatientId { get; set; }
-        public Patient Patient { get; set; }        
+        public  Patient Patient { get; set; }        
         public int DoctorId { get; set; }
         public DoctorMedic DoctorMedic { get; set; }
     }

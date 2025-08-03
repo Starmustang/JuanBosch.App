@@ -17,7 +17,7 @@ namespace JuanBosch.App.Models.Doctors
         public string DoctorSpeciality { get; set; } = string.Empty;
         public int DoctorAddressId { get; set; }        
         public DoctorAddress DoctorAddress { get; set; }
-        public  string DoctorExecatur { get; set; }
+        public string DoctorExecatur { get; set; }
        public ICollection<DateMedic> DateMedics { get; set; } = new List<DateMedic>();
        public ICollection<MedicRecord> MedicRecords { get; set; } = new List<MedicRecord>();
        public ICollection<DoctorEnsurance> DoctorEnsurances { get; set; } = new List<DoctorEnsurance>();
