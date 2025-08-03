@@ -20,14 +20,10 @@ namespace JuanBosch.App.Data.Configurations.dates
             .IsRequired()
             .HasMaxLength(25);
 
-            builder.Property(d => d.ConsultationTypeId)
-            .IsRequired();
-
             builder.HasOne(d => d.Patient)
             .WithMany(p => p.DateMedics)
             .HasForeignKey(d => d.PatientId);
             
-
             builder.HasOne(d => d.Doctor)
             .WithMany(p => p.DateMedics)
             .HasForeignKey(d => d.DoctorId);
