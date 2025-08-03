@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using JuanBosch.App.Models.Doctors;
 
 namespace JuanBosch.App.Models.Ars
 {
@@ -15,6 +16,7 @@ namespace JuanBosch.App.Models.Ars
         public DateTime EnsuranceUpdateDate { get; set; }
         
         public ICollection<ArsPlans> Plans { get; set; } = new List<ArsPlans>();
+        public ICollection<DoctorEnsurance> DoctorEnsurances { get; set; } = new List<DoctorEnsurance>();
         public TimeOnly EnsuranceSchedule { get; set; }
     }
 }
