@@ -4,8 +4,7 @@ namespace JuanBosch.App.Models.MedicEvaluations
 {
     public class MedicEvaluation
     {
-        public int MedicEvaluationId { get; set; }
-        
+        public int MedicEvaluationId { get; set; }        
         public int WeightEva { get; set; }
         public int PresurreEva { get; set; }
         public int BreathingEva { get; set; }

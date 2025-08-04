@@ -19,4 +19,12 @@ namespace JuanBosch.App.Dtos.AddressDtos
         public string ProvinceName { get; set; } = string.Empty;
         public int CountryId { get; set; }
     }
+
+    public class ProvinceListDto
+    {
+        public int ProvinceId { get; set; }
+        public string ProvinceName { get; set; } = string.Empty;
+        public int CountryId { get; set; }
+        public string? CountryName {get; set;}
+    }
 }
