@@ -1,35 +1,69 @@
 namespace JuanBosch.App.Dtos.Patient
 {
-    public class AddressDto
-    {
+    public class PatientReadDto {
+        public int PatientId { get; set; }
+        public required string PatientName { get; set; }
+        public required string PatientLastName { get; set; }
+        public string? PatientIdCard { get; set; }
+        public string? PatientPassport { get; set; }
+        public DateOnly? PatientBirthDate { get; set; }
+        public string? PatientGender { get; set; }
+        public string? PatientEmail { get; set; }
+        public string? PatientPhone { get; set; }
+        public int ArsPlansId { get; set; }
+        public string ArsPlansName { get; set; }
         public int? AddressId { get; set; }
-        public int? SectorId { get; set; }
-        public int? MunicipalityId { get; set; }
-        public int? ProvinceId { get; set; }
-        public int? CountryId { get; set; }
+        public string HouseNumber { get; set; }
+        public string HouseStreet { get; set; }
+        public string PatientEmergencieContact { get; set; }
+
+        public string PatientFisRecord { get; set; }
+        public int BloodId { get; set; }
+        public int MedicRecordId { get; set; }        
+        public int PatientDirectionId { get; set; }
+        public int PatientDoctorId { get; set; }
+        public int DateMedicId { get; set; }
     }
 
-    public class PatientCreateDto
-    {
-        public string name { get; set; } = string.Empty;
-        public string lastName { get; set; } = string.Empty;
-        public string? idCard { get; set; }
-        public string? passport { get; set; }
-        public string? phone { get; set; }
-        public string? gender { get; set; }
-        public string? email { get; set; }
-        public DateOnly? dateOfBirth { get; set; }
-        
-        // Address information
-        public AddressDto? Address { get; set; }
+    public class PatientCreateDto {
+        public required string PatientName { get; set; }
+        public required string PatientLastName { get; set; }
+        public string? PatientIdCard { get; set; }
+        public string? PatientPassport { get; set; }
+        public DateOnly? PatientBirthDate { get; set; }
+        public string? PatientGender { get; set; }
+        public string? PatientEmail { get; set; }
+        public string? PatientPhone { get; set; }
+        public int ArsPlansId { get; set; }        
+        public int? AddressId { get; set; }                
+        public string PatientEmergencieContact { get; set; }
+        public string PatientFisRecord { get; set; }
+        public int BloodId { get; set; }
+        public int MedicRecordId { get; set; }        
+        public int PatientDirectionId { get; set; }
+        public int PatientDoctorId { get; set; }
+        public int DateMedicId { get; set; }
     }
 
-    public class PatientReadDto : PatientCreateDto
-    {
-        public int id { get; set; }
-    }
-
-    public class PatientUpdateDto : PatientCreateDto
-    {
+    public class PatientUpdateDto {
+        public int PatientId { get; set; }
+        public required string PatientName { get; set; }
+        public required string PatientLastName { get; set; }
+        public string? PatientIdCard { get; set; }
+        public string? PatientPassport { get; set; }
+        public DateOnly? PatientBirthDate { get; set; }
+        public string? PatientGender { get; set; }
+        public string? PatientEmail { get; set; }
+        public string? PatientPhone { get; set; }
+        public int ArsPlansId { get; set; }
+        public string ArsPlansName { get; set; }
+        public int? AddressId { get; set; }        
+        public string PatientEmergencieContact { get; set; }
+        public string PatientFisRecord { get; set; }
+        public int BloodId { get; set; }
+        public int MedicRecordId { get; set; }        
+        public int PatientDirectionId { get; set; }
+        public int PatientDoctorId { get; set; }
+        public int DateMedicId { get; set; }
     }
 }

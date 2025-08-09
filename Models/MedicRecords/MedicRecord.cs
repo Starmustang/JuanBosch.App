@@ -8,9 +8,9 @@ namespace JuanBosch.App.Models.MedicRecords
         public int RecordId { get; set; }
         public required Patient Patient { get; set; }
         public int PatientId { get; set; }
-        public DoctorMedic DoctorsMedics { get; set; }
+        public DoctorMedic? DoctorsMedics { get; set; }
         public int DoctorId { get; set; }
-        public string FollowUpMedicRecord { get; set; }
-        public string SignsMedicRecord { get; set; }
+        public string? FollowUpMedicRecord { get; set; }
+        public string? SignsMedicRecord { get; set; }
     }
 }
