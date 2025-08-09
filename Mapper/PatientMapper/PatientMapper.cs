@@ -1,5 +1,6 @@
 using JuanBosch.App.Dtos.Patient;
 using JuanBosch.App.Models;
+using JuanBosch.App.Models.Bloods;
 using JuanBosch.App.Models.Patients;
 
 namespace JuanBosch.App.Mapper
@@ -14,22 +15,18 @@ namespace JuanBosch.App.Mapper
             }
             return new Patient
             {
-                PatientName = patientCreateDto.name,
-                PatientLastName = patientCreateDto.lastName,
-                PatientIdCard = patientCreateDto.idCard,
-                PatientPassport = patientCreateDto.passport,
-                PatientPhone = patientCreateDto.phone,
-                PatientBirthDate = patientCreateDto.dateOfBirth,
-                PatientGender = patientCreateDto.gender,
-                PatientEmail = patientCreateDto.email,
-                AddressId = patientCreateDto.Address?.AddressId,
-                PatientDirection = patientCreateDto.Address != null ? new PatientDirection
-                {
-                    SectorId = patientCreateDto.Address.SectorId ?? 0,
-                    MunicipalityId = patientCreateDto.Address.MunicipalityId ?? 0,
-                    ProvinceId = patientCreateDto.Address.ProvinceId ?? 0,
-                    CountryId = patientCreateDto.Address.CountryId ?? 0
-                } : null
+                PatientName = patientCreateDto.PatientName,
+                PatientLastName = patientCreateDto.PatientLastName,
+                PatientIdCard = patientCreateDto.PatientIdCard,
+                PatientPassport = patientCreateDto.PatientPassport,
+                PatientPhone = patientCreateDto.PatientPhone,
+                PatientBirthDate = patientCreateDto.PatientBirthDate,
+                PatientGender = patientCreateDto.PatientGender,
+                PatientEmail = patientCreateDto.PatientEmail,
+                AddressId = patientCreateDto.AddressId,
+                BloodId = patientCreateDto.BloodId,  
+                
+                
             };
         }
         public static PatientReadDto ToReadPatient(this Patient patient)
@@ -40,23 +37,17 @@ namespace JuanBosch.App.Mapper
             }
             return new PatientReadDto
             {
-                id = patient.PatientId,
-                name = patient.PatientName,
-                lastName = patient.PatientLastName,
-                idCard = patient.PatientIdCard,
-                passport = patient.PatientPassport,
-                phone = patient.PatientPhone,
-                dateOfBirth = patient.PatientBirthDate.Value,
-                gender = patient.PatientGender,
-                email = patient.PatientEmail,
-                Address = new AddressDto
-                {
-                    AddressId = patient.AddressId,
-                    SectorId = patient.PatientDirection?.SectorId,
-                    MunicipalityId = patient.PatientDirection?.MunicipalityId,
-                    ProvinceId = patient.PatientDirection?.ProvinceId,
-                    CountryId = patient.PatientDirection?.CountryId
-                }
+                PatientId = patient.PatientId,
+                PatientName = patient.PatientName,
+                PatientLastName = patient.PatientLastName,
+                PatientIdCard = patient.PatientIdCard,
+                PatientPassport = patient.PatientPassport,
+                PatientPhone = patient.PatientPhone,
+                PatientBirthDate = patient.PatientBirthDate.Value,
+                PatientGender = patient.PatientGender,
+                PatientEmail = patient.PatientEmail,
+                AddressId = patient.AddressId,     
+                BloodType = patient.Blood?.BloodType ?? string.Empty           
             };
         }
     }

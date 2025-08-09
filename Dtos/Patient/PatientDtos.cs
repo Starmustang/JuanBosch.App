@@ -19,6 +19,7 @@ namespace JuanBosch.App.Dtos.Patient
 
         public string PatientFisRecord { get; set; }
         public int BloodId { get; set; }
+        public string BloodType { get; set; }
         public int MedicRecordId { get; set; }        
         public int PatientDirectionId { get; set; }
         public int PatientDoctorId { get; set; }
@@ -37,7 +38,7 @@ namespace JuanBosch.App.Dtos.Patient
         public int ArsPlansId { get; set; }        
         public int? AddressId { get; set; }                
         public string PatientEmergencieContact { get; set; }
-        public string PatientFisRecord { get; set; }
+        public string PatientFirstRecord { get; set; }
         public int BloodId { get; set; }
         public int MedicRecordId { get; set; }        
         public int PatientDirectionId { get; set; }

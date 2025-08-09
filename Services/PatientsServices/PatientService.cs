@@ -17,12 +17,18 @@ namespace JuanBosch.App.Services
         
         public async Task<List<PatientReadDto>> GetAllPatientsAsync()
         {
-            return await _context.Patients.Select(p => PatientMapper.ToReadPatient(p)).ToListAsync();
+            return await _context.Patients
+            .Include(p => p.Blood)
+            .Select(p => PatientMapper.ToReadPatient(p))
+            .ToListAsync();
         }
 
         public async Task<PatientReadDto> GetPatientByIdAsync(int id)
         {
-            return await _context.Patients.Select(p => PatientMapper.ToReadPatient(p)).FirstOrDefaultAsync(p => p.id == id);
+            return await _context.Patients
+            .Include(p => p.Blood)
+            .Select(p => PatientMapper.ToReadPatient(p))
+            .FirstOrDefaultAsync(p => p.PatientId == id);
         }
 
         public async Task<PatientCreateDto> CreatePatientAsync(PatientCreateDto patient)
@@ -40,28 +46,23 @@ namespace JuanBosch.App.Services
             {
                 throw new ArgumentNullException(nameof(existingPatient));
             }
-            existingPatient.PatientName = patient.name;
-            existingPatient.PatientLastName = patient.lastName;
-            existingPatient.PatientIdCard = patient.idCard;
-            existingPatient.PatientPassport = patient.passport;
-            existingPatient.PatientPhone = patient.phone;
-            existingPatient.PatientBirthDate = patient.dateOfBirth;
-            existingPatient.PatientGender = patient.gender;
-            existingPatient.PatientEmail = patient.email;
+            existingPatient.PatientName = patient.PatientName;
+            existingPatient.PatientLastName = patient.PatientLastName;
+            existingPatient.PatientIdCard = patient.PatientIdCard;
+            existingPatient.PatientPassport = patient.PatientPassport;
+            existingPatient.PatientPhone = patient.PatientPhone;
+            existingPatient.PatientBirthDate = patient.PatientBirthDate;
+            existingPatient.PatientGender = patient.PatientGender;
+            existingPatient.PatientEmail = patient.PatientEmail;
             
-            if (patient.Address != null)
+            if (patient.AddressId != null)
             {
-                existingPatient.AddressId = patient.Address.AddressId;
+                existingPatient.AddressId = patient.AddressId;
                 
                 if (existingPatient.PatientDirection == null)
                 {
                     existingPatient.PatientDirection = new PatientDirection();
-                }
-                
-                existingPatient.PatientDirection.SectorId = patient.Address.SectorId ?? 0;
-                existingPatient.PatientDirection.MunicipalityId = patient.Address.MunicipalityId ?? 0;
-                existingPatient.PatientDirection.ProvinceId = patient.Address.ProvinceId ?? 0;
-                existingPatient.PatientDirection.CountryId = patient.Address.CountryId ?? 0;
+                }                                
             }
             await _context.SaveChangesAsync();
             return patient;
