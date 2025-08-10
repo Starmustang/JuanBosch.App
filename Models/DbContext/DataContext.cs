@@ -4,6 +4,7 @@ using System.Reflection;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using JuanBosch.App.Models.Patients;
 using JuanBosch.App.Models.MedicEvaluations;
+using JuanBosch.App.Models.Dates;
 
 namespace JuanBosch.App.Models.DataContext
 {
@@ -20,7 +21,9 @@ namespace JuanBosch.App.Models.DataContext
         public DbSet<DoctorAddress> DoctorAddresses { get; set; }
         public DbSet<Province> Provinces { get; set; }
         public DbSet<Country> Countries { get; set; }
+        public DbSet<DateDoctor> DateDoctors { get; set; }
         public DbSet<MedicEvaluation> MedicEvaluations { get; set; }
+        public DbSet<DateMedic> DateMedics { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
