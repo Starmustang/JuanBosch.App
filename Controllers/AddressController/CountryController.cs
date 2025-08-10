@@ -41,7 +41,7 @@ namespace JuanBosch.App.Controllers
         public async Task<ActionResult<CountryReadDto>> CreateCountryAsync(CountryCreateDto country)
         {
             var countryDto = await _countryService.CreateCountryAsync(country);
-            return CreatedAtAction(nameof(GetCountryByIdAsync), new { id = countryDto.CountryId }, countryDto);
+            return Created($"api/Country/{countryDto.CountryId}", countryDto);
         }
 
         [HttpPut("{id}")]
