@@ -1,8 +1,7 @@
-using JuanBosch.App.Models.Address;
-using JuanBosch.App.Models.DataContext;
+using JuanBosch.App.Dtos.AddressDtos;
+using JuanBosch.App.Dtos.Country;
 using JuanBosch.App.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
-
 
 namespace JuanBosch.App.Controllers
 {
@@ -10,16 +9,14 @@ namespace JuanBosch.App.Controllers
     [ApiController]
     public class CountryController : ControllerBase
     {
-        private readonly DataContext _context;
         private readonly ICountryService _countryService;
-        public CountryController(DataContext context, ICountryService countryService)
+        public CountryController(ICountryService countryService)
         {
-            _context = context;
             _countryService = countryService;
         }
         
         [HttpGet]
-        public async Task<ActionResult<List<Country>>> GetAllCountriesAsync()
+        public async Task<ActionResult<List<CountryReadDto>>> GetAllCountriesAsync()
         {
             var countryDto = await _countryService.GetAllCountriesAsync();
             if (countryDto == null)
@@ -30,7 +27,7 @@ namespace JuanBosch.App.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Country>> GetCountryByIdAsync(int id)
+        public async Task<ActionResult<CountryReadDto>> GetCountryByIdAsync(int id)
         {
             var countryDto = await _countryService.GetCountryByIdAsync(id);
             if (countryDto == null)
@@ -41,16 +38,17 @@ namespace JuanBosch.App.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Country>> CreateCountryAsync(Country country)
+        public async Task<ActionResult<CountryReadDto>> CreateCountryAsync(CountryCreateDto country)
         {
             var countryDto = await _countryService.CreateCountryAsync(country);
-            return Ok(countryDto);
+            return CreatedAtAction(nameof(GetCountryByIdAsync), new { id = countryDto.CountryId }, countryDto);
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<Country>> UpdateCountryAsync(int id, Country country)
+        public async Task<ActionResult<CountryReadDto>> UpdateCountryAsync(int id, CountryUpdateDto country)
         {
             var countryDto = await _countryService.UpdateCountryAsync(id, country);
+            if (countryDto == null) return NotFound();
             return Ok(countryDto);
         }
 

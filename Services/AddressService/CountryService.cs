@@ -1,3 +1,6 @@
+using JuanBosch.App.Dtos.AddressDtos;
+using JuanBosch.App.Dtos.Country;
+using JuanBosch.App.Mapper.AddressMapper;
 using JuanBosch.App.Models.Address;
 using JuanBosch.App.Models.DataContext;
 using JuanBosch.App.Services.Interface;
@@ -13,35 +16,42 @@ namespace JuanBosch.App.Services
             _context = context;
         }
         
-        public async Task<List<Country>> GetAllCountriesAsync()
+        public async Task<List<CountryReadDto>> GetAllCountriesAsync()
         {
-            return await _context.Countries.ToListAsync();
+            return await _context.Countries
+                .Select(c => CountryMapper.ToReadCountry(c))
+                .ToListAsync();
         }
         
-        public async Task<Country> GetCountryByIdAsync(int id)
+        public async Task<CountryReadDto?> GetCountryByIdAsync(int id)
         {
-            return await _context.Countries.FindAsync(id);
+            return await _context.Countries
+                .Where(c => c.CountryId == id)
+                .Select(c => CountryMapper.ToReadCountry(c))
+                .FirstOrDefaultAsync();
         }
         
-        public async Task<Country> CreateCountryAsync(Country country)
+        public async Task<CountryReadDto> CreateCountryAsync(CountryCreateDto country)
         {
-            _context.Countries.Add(country);
+            var entity = country.ToCreateCountry();
+            _context.Countries.Add(entity);
             await _context.SaveChangesAsync();
-            return country;
+            return await GetCountryByIdAsync(entity.CountryId)
+                   ?? throw new InvalidOperationException("Failed to retrieve created country");
         }
         
-        public async Task<Country> UpdateCountryAsync(int id, Country country)
+        public async Task<CountryReadDto?> UpdateCountryAsync(int id, CountryUpdateDto country)
         {
             var existingCountry = await _context.Countries.FindAsync(id);
             if (existingCountry == null)
             {
-                throw new ArgumentNullException(nameof(existingCountry));
+                return null;
             }
             existingCountry.CountryName = country.CountryName;
             existingCountry.CountryLanguage = country.CountryLanguage;
             existingCountry.CountryCurrency = country.CountryCurrency;
             await _context.SaveChangesAsync();
-            return country;
+            return await GetCountryByIdAsync(id);
         }
         
         public async Task<bool> DeleteCountryAsync(int id)
@@ -49,7 +59,7 @@ namespace JuanBosch.App.Services
             var existingCountry = await _context.Countries.FindAsync(id);
             if (existingCountry == null)
             {
-                throw new ArgumentNullException(nameof(existingCountry));
+                return false;
             }
             _context.Countries.Remove(existingCountry);
             await _context.SaveChangesAsync();

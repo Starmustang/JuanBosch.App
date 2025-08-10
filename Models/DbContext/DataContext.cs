@@ -17,6 +17,7 @@ namespace JuanBosch.App.Models.DataContext
         public DbSet<PatientDirection> PatientDirections { get; set; }
         public DbSet<Municipality> Municipalities { get; set; }
         public DbSet<Sector> Sectors { get; set; }
+        public DbSet<DoctorAddress> DoctorAddresses { get; set; }
         public DbSet<Province> Provinces { get; set; }
         public DbSet<Country> Countries { get; set; }
         public DbSet<MedicEvaluation> MedicEvaluations { get; set; }
