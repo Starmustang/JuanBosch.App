@@ -7,6 +7,8 @@ using Pomelo.EntityFrameworkCore.MySql;
 using JuanBosch.App.Models.DataContext;
 using JuanBosch.App.Services.Interface;
 using JuanBosch.App.Services;
+using JuanBosch.App.Services.MedicEvaluationService;
+using JuanBosch.App.Services.Interface.IMedicEvaluationService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +20,7 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddScoped<IPatientService, PatientService>();
 builder.Services.AddScoped<ICountryService, CountryService>();
+builder.Services.AddScoped<IMedicEvaluationService, MedicEvaluationService>();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<DataContext>(options =>

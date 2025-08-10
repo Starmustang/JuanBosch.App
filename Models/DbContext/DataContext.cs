@@ -3,6 +3,7 @@ using JuanBosch.App.Models.Address;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using JuanBosch.App.Models.Patients;
+using JuanBosch.App.Models.MedicEvaluations;
 
 namespace JuanBosch.App.Models.DataContext
 {
@@ -18,6 +19,7 @@ namespace JuanBosch.App.Models.DataContext
         public DbSet<Sector> Sectors { get; set; }
         public DbSet<Province> Provinces { get; set; }
         public DbSet<Country> Countries { get; set; }
+        public DbSet<MedicEvaluation> MedicEvaluations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
