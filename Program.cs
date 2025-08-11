@@ -15,6 +15,10 @@ using JuanBosch.App.Services.BloodService;
 using JuanBosch.App.Services.Interface.IBloodService;
 using JuanBosch.App.Services.Interface.IDateService;
 using JuanBosch.App.Services.DatesService;
+using JuanBosch.App.Services.MedicRecordService;
+using JuanBosch.App.Services.Interface.IMedicRecordService;
+using JuanBosch.App.Services.ArsService;
+using JuanBosch.App.Services.Interface.IArsService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,6 +39,9 @@ builder.Services.AddScoped<IProvinceService, ProvinceService>();
 builder.Services.AddScoped<IBloodService, BloodService>();
 builder.Services.AddScoped<IDateDoctorsService, DateDoctorService>();
 builder.Services.AddScoped<IDateMedicService, DateMedicService>();
+builder.Services.AddScoped<IMedicRecordsService, MedicRecordsService>();
+builder.Services.AddScoped<IArsEnsuranceService, ArsEnsuranceService>();
+builder.Services.AddScoped<IArsPlanService, ArsPlanService>();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<DataContext>(options =>
