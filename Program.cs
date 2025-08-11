@@ -11,6 +11,10 @@ using JuanBosch.App.Services.MedicEvaluationService;
 using JuanBosch.App.Services.Interface.IMedicEvaluationService;
 using JuanBosch.App.Services.Interface.IAdressService;
 using JuanBosch.App.Services.AddressService;
+using JuanBosch.App.Services.BloodService;
+using JuanBosch.App.Services.Interface.IBloodService;
+using JuanBosch.App.Services.Interface.IDateService;
+using JuanBosch.App.Services.DatesService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +32,9 @@ builder.Services.AddScoped<ISectorService, SectorService>();
 builder.Services.AddScoped<IPatientDirectionService, PatientDirectionService>();
 builder.Services.AddScoped<IDoctorAddressService, DoctorAddressService>();
 builder.Services.AddScoped<IProvinceService, ProvinceService>();
+builder.Services.AddScoped<IBloodService, BloodService>();
+builder.Services.AddScoped<IDateDoctorsService, DateDoctorService>();
+builder.Services.AddScoped<IDateMedicService, DateMedicService>();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<DataContext>(options =>

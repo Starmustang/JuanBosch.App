@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using JuanBosch.App.Models.Patients;
 using JuanBosch.App.Models.MedicEvaluations;
 using JuanBosch.App.Models.Dates;
+using JuanBosch.App.Models.Bloods;
 
 namespace JuanBosch.App.Models.DataContext
 {
@@ -24,6 +25,7 @@ namespace JuanBosch.App.Models.DataContext
         public DbSet<DateDoctor> DateDoctors { get; set; }
         public DbSet<MedicEvaluation> MedicEvaluations { get; set; }
         public DbSet<DateMedic> DateMedics { get; set; }
+        public DbSet<Blood> Bloods { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
