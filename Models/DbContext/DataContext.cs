@@ -6,6 +6,7 @@ using JuanBosch.App.Models.Patients;
 using JuanBosch.App.Models.MedicEvaluations;
 using JuanBosch.App.Models.Dates;
 using JuanBosch.App.Models.Bloods;
+using JuanBosch.App.Models.MedicRecords;
 
 namespace JuanBosch.App.Models.DataContext
 {
@@ -26,6 +27,7 @@ namespace JuanBosch.App.Models.DataContext
         public DbSet<MedicEvaluation> MedicEvaluations { get; set; }
         public DbSet<DateMedic> DateMedics { get; set; }
         public DbSet<Blood> Bloods { get; set; }
+        public DbSet<MedicRecord> MedicRecords { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

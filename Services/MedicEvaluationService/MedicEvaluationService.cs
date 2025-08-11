@@ -24,8 +24,10 @@ namespace JuanBosch.App.Services.MedicEvaluationService
         public async Task<MedicEvaluationReadDto> GetMedicEvaluationByIdAsync(int id)
         {
             return await _context.MedicEvaluations
+            .AsNoTracking()
+            .Where(p => p.MedicEvaluationId == id)
             .Select(p => MedicEvaluationMapper.ToReadMedicEvaluation(p))
-            .FirstOrDefaultAsync(p => p.MedicEvaluationId == id);
+            .FirstOrDefaultAsync();
         }
 
         public async Task<MedicEvaluationCreateDto> CreateMedicEvaluationAsync(MedicEvaluationCreateDto medicEvaluation)
