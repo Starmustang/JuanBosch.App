@@ -8,6 +8,7 @@ using JuanBosch.App.Models.Dates;
 using JuanBosch.App.Models.Bloods;
 using JuanBosch.App.Models.MedicRecords;
 using JuanBosch.App.Models.Ars;
+using JuanBosch.App.Models.Doctors;
 
 namespace JuanBosch.App.Models.DataContext
 {
@@ -31,6 +32,8 @@ namespace JuanBosch.App.Models.DataContext
         public DbSet<MedicRecord> MedicRecords { get; set; }
         public DbSet<ArsEnsurance> ArsEnsurances { get; set; }
         public DbSet<ArsPlans> ArsPlans { get; set; }
+        public DbSet<DoctorMedic> Doctors { get; set; }
+        public DbSet<DoctorEnsurance> DoctorEnsurances { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
