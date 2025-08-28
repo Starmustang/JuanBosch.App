@@ -9,54 +9,54 @@ namespace JuanBosch.App.Services.DoctorService
     public class DoctorService : IDoctorService
     {
         private readonly DataContext _context;
-        public DoctorService(DataContext _context)
+        public DoctorService(DataContext context)
         {
-            _context = _context;
+            _context = context;
         }
-        public Task<List<DoctorReadDto>> GetAllDoctorsAsync()
+        public async Task<List<DoctorReadDto>> GetAllDoctorsAsync()
         {
-            return _context.Doctors
+            return await _context.Doctors
             .Select(d => DoctorMapper.ToReadDoctor(d))
             .ToListAsync();
         }
 
-        public Task<DoctorReadDto> GetDoctorByIdAsync(int id)
+        public async Task<DoctorReadDto> GetDoctorByIdAsync(int id)
         {
-            return _context.Doctors
+            return await _context.Doctors
             .Where(d => d.DoctorId == id)
             .Select(d => DoctorMapper.ToReadDoctor(d))
             .FirstOrDefaultAsync();
         }
 
-        public Task<DoctorReadDto> CreateDoctorAsync(DoctorCreateDto dto)
+        public async Task<DoctorReadDto> CreateDoctorAsync(DoctorCreateDto dto)
         {
             var entity = dto.ToCreateDoctor();
             _context.Doctors.Add(entity);
-            _context.SaveChangesAsync();
-            return GetDoctorByIdAsync(entity.DoctorId)
+            await _context.SaveChangesAsync();
+            return await GetDoctorByIdAsync(entity.DoctorId)
                    ?? throw new InvalidOperationException("Failed to retrieve created doctor");
         }
 
-        public Task<DoctorReadDto> UpdateDoctorAsync(int id, DoctorUpdateDto dto)
+        public async Task<DoctorReadDto> UpdateDoctorAsync(int id, DoctorUpdateDto dto)
         {
-            var entity = _context.Doctors
+            var entity = await _context.Doctors
             .Where(d => d.DoctorId == id)
-            .FirstOrDefault();
+            .FirstOrDefaultAsync();
             if (entity == null)
             {
                 throw new InvalidOperationException("Doctor not found");
             }
             DoctorMapper.ApplyUpdate(entity, dto);
-            _context.SaveChangesAsync();
-            return GetDoctorByIdAsync(entity.DoctorId)
+            await _context.SaveChangesAsync();
+            return await GetDoctorByIdAsync(entity.DoctorId)
                    ?? throw new InvalidOperationException("Failed to retrieve updated doctor");
         }
 
         public async Task<bool> DeleteDoctorAsync(int id)
         {
-            var entity = _context.Doctors
+            var entity = await _context.Doctors
             .Where(d => d.DoctorId == id)
-            .FirstOrDefault();
+            .FirstOrDefaultAsync();
             if (entity == null)
             {
                 throw new InvalidOperationException("Doctor not found");
