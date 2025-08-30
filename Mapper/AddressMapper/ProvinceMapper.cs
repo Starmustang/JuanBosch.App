@@ -56,9 +56,7 @@ namespace JuanBosch.App.Mapper.AddressMapper
             return new ProvinceListDto
             {
                 ProvinceId = province.ProvinceId,
-                ProvinceName = province.ProvinceName,
-                CountryId = province.CountryId,
-                CountryName = province.Country?.CountryName
+                ProvinceName = province.ProvinceName,                
             };
         }
     }
