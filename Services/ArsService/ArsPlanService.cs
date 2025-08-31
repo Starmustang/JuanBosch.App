@@ -26,8 +26,9 @@ namespace JuanBosch.App.Services.ArsService
         {
             return await _context.ArsPlans
             .Include(p => p.ArsEnsurance)
+            .Where(p => p.ArsPlansId == id)
             .Select(p => ArsPlanMapper.ToReadArsPlan(p))
-            .FirstOrDefaultAsync(p => p.ArsPlansId == id);
+            .FirstOrDefaultAsync();
         }
 
         public async Task<ArsPlanReadDto> CreateArsPlanAsync(ArsPlanCreateDto arsPlan)

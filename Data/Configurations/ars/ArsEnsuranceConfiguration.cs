@@ -16,7 +16,7 @@ namespace JuanBosch.App.Data.Configurations
 
             builder.Property(a => a.EnsuranceName)
             .IsRequired()
-            .HasMaxLength(25);
+            .HasMaxLength(40);
 
             builder.Property(a => a.EnsuranceDirection)
             .IsRequired()
@@ -24,13 +24,13 @@ namespace JuanBosch.App.Data.Configurations
 
             builder.Property(a => a.EnsurancePhone)
             .IsRequired()
-            .HasMaxLength(13);
+            .HasMaxLength(20);
 
             builder.Property(a => a.EnsurancePhone2)
-            .HasMaxLength(13);
+            .HasMaxLength(20);
 
             builder.Property(a => a.EnsuranceFax)
-            .HasMaxLength(13);
+            .HasMaxLength(20);
 
             builder.Property(a => a.EnsuranceEmail)
             .HasMaxLength(100);

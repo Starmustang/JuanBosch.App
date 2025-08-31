@@ -22,7 +22,8 @@ namespace JuanBosch.App.Mapper.ArsMapaper
                 CoveragePlanArs = dto.CoveragePlanArs,
                 InternationalCoverage = dto.InternationalCoverage,
                 IsPlanActive = dto.IsPlanActive,
-                MaxLimitArs = dto.MaxLimitArs
+                MaxLimitArs = dto.MaxLimitArs,
+                ArsEnsuranceId = dto.ArsEnsuranceId
             };
         }
 
@@ -65,7 +66,8 @@ namespace JuanBosch.App.Mapper.ArsMapaper
                 CoveragePlanArs = dto.CoveragePlanArs,
                 InternationalCoverage = dto.InternationalCoverage,
                 IsPlanActive = dto.IsPlanActive,
-                MaxLimitArs = dto.MaxLimitArs
+                MaxLimitArs = dto.MaxLimitArs,
+                ArsEnsuranceId = dto.ArsEnsuranceId
             };
         }
 

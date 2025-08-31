@@ -22,6 +22,7 @@ namespace JuanBosch.App.Dtos.Ars
         public bool InternationalCoverage { get; set; }
         public bool IsPlanActive { get; set; }
         public required string MaxLimitArs { get; set; }
+        public int ArsEnsuranceId { get; set; }
     }
 
     public class ArsPlanCreateDto
@@ -32,5 +33,6 @@ namespace JuanBosch.App.Dtos.Ars
         public bool InternationalCoverage { get; set; }
         public bool IsPlanActive { get; set; }
         public required string MaxLimitArs { get; set; }
+        public int ArsEnsuranceId { get; set; }
     }
 }

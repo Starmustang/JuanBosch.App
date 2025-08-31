@@ -24,8 +24,9 @@ namespace JuanBosch.App.Services.ArsService
         public async Task<ArsEnsurancesReadDto> GetArsEnsuranceByIdAsync(int id)
         {
             return await _context.ArsEnsurances
+            .Where(e => e.ArsEnsuranceId == id)
             .Select(e => ArsEnsuranceMapper.ToReadArsEnsurance(e))
-            .FirstOrDefaultAsync(e => e.ArsEnsuranceId == id);
+            .FirstOrDefaultAsync();
         }
 
         public async Task<ArsEnsurancesReadDto> CreateArsEnsuranceAsync(ArsEnsurancesCreateDto arsEnsurance)
