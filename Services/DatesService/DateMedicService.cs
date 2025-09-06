@@ -45,7 +45,7 @@ namespace JuanBosch.App.Services.DatesService
             }
             existingDateMedic.DateMedicDate = dto.DateMedicDate;
             existingDateMedic.HospitalMedicDate = dto.HospitalMedicDate;
-            existingDateMedic.ConsultationTypeId = dto.ConsultationTypeId;
+            existingDateMedic.ConsultationType = (Models.Enums.ConsultationType)dto.ConsultationTypeId;
             existingDateMedic.DateDoctorId = dto.DateDoctorId;
             await _context.SaveChangesAsync();
             return await GetDateMedicAsync(id)
@@ -63,8 +63,6 @@ namespace JuanBosch.App.Services.DatesService
             await _context.SaveChangesAsync();
             return await GetDateMedicAsync(id)
                    ?? throw new InvalidOperationException("Failed to retrieve deleted date medic");
-        }
-
-        
+        }        
     }
 }

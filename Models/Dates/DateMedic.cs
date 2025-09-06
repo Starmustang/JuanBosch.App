@@ -1,6 +1,8 @@
 using JuanBosch.App.Models.Doctors;
 using JuanBosch.App.Models.Patients;
 using JuanBosch.App.Models.Consultation;
+using JuanBosch.App.Models.Enums;
+using ConsultationType = JuanBosch.App.Models.Enums.ConsultationType;
 
 namespace JuanBosch.App.Models.Dates
 {
@@ -13,8 +15,7 @@ namespace JuanBosch.App.Models.Dates
         public int DoctorId { get; set; }
         public DateTime DateMedicDate { get; set; }
         public required string HospitalMedicDate { get; set; }
-        public int ConsultationTypeId { get; set; }
-        public required ConsultationType ConsultationType { get; set; }
+        public ConsultationType ConsultationType { get; set; }
         public required DateDoctor DateDoctor { get; set; }
         public int DateDoctorId { get; set; }
 

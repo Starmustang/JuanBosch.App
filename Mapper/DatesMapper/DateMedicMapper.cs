@@ -23,8 +23,7 @@ namespace JuanBosch.App.Mapper.DatesMapper
                 DoctorId = dto.DoctorId,
                 DateMedicDate = dto.DateMedicDate,
                 HospitalMedicDate = dto.HospitalMedicDate,
-                ConsultationType = default!,
-                ConsultationTypeId = dto.ConsultationTypeId,
+                ConsultationType = (Models.Enums.ConsultationType)dto.ConsultationTypeId,
                 DateDoctor = default!,
                 DateDoctorId = dto.DateDoctorId
             };
@@ -47,7 +46,7 @@ namespace JuanBosch.App.Mapper.DatesMapper
                 DoctorName = entity.Doctor?.DoctorName ?? string.Empty,
                 DateMedicDate = entity.DateMedicDate,
                 HospitalMedicDate = entity.HospitalMedicDate,
-                ConsultationTypeId = entity.ConsultationTypeId,
+                ConsultationTypeId = (int)entity.ConsultationType,
                 DateDoctorId = entity.DateDoctorId
             };
         }
@@ -69,8 +68,7 @@ namespace JuanBosch.App.Mapper.DatesMapper
                 DoctorId = dto.DoctorId,
                 DateMedicDate = dto.DateMedicDate,
                 HospitalMedicDate = dto.HospitalMedicDate,
-                ConsultationType = default!,
-                ConsultationTypeId = dto.ConsultationTypeId,
+                ConsultationType = (Models.Enums.ConsultationType)dto.ConsultationTypeId,
                 DateDoctor = default!,
                 DateDoctorId = dto.DateDoctorId
             };
@@ -92,7 +90,7 @@ namespace JuanBosch.App.Mapper.DatesMapper
             entity.DoctorId = dto.DoctorId;
             entity.DateMedicDate = dto.DateMedicDate;
             entity.HospitalMedicDate = dto.HospitalMedicDate;
-            entity.ConsultationTypeId = dto.ConsultationTypeId;
+            entity.ConsultationType = (Models.Enums.ConsultationType)dto.ConsultationTypeId;
             entity.DateDoctorId = dto.DateDoctorId;
         }
     }

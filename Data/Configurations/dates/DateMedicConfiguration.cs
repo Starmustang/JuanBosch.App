@@ -28,9 +28,9 @@ namespace JuanBosch.App.Data.Configurations.dates
             .WithMany(p => p.DateMedics)
             .HasForeignKey(d => d.DoctorId);
 
-            builder.HasOne(d => d.ConsultationType)
-            .WithMany(p => p.DateMedics)
-            .HasForeignKey(d => d.ConsultationTypeId);
+            builder.Property(d => d.ConsultationType)
+            .HasColumnName("ConsultationTypeId")
+            .IsRequired();
 
             builder.HasOne(d => d.DateDoctor)
             .WithMany(p => p.DateMedics)
