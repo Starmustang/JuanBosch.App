@@ -103,6 +103,11 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
+// Log the connection string for debugging.
+// WARNING: This may log sensitive information. Remove this in a production environment once the issue is resolved.
+var logger = app.Services.GetRequiredService<ILogger<Program>>();
+logger.LogInformation("Using connection string: {ConnectionString}", connectionString);
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
