@@ -61,17 +61,23 @@ builder.Services.AddScoped<IArsPlanService, ArsPlanService>();
 builder.Services.AddScoped<IDoctorEnsuranceService, DoctorEnsuranceService>();
 builder.Services.AddScoped<IDoctorService, DoctorService>();
 
-string? connectionString;
+string? connectionString = null;
 
 if (builder.Environment.IsProduction())
 {
-    var dbHost = Environment.GetEnvironmentVariable("MYSQLHOST");
-    var dbUser = Environment.GetEnvironmentVariable("MYSQLUSER");
-    var dbPassword = Environment.GetEnvironmentVariable("MYSQLPASSWORD");
-    var dbName = Environment.GetEnvironmentVariable("MYSQLDATABASE");
-    var dbPort = Environment.GetEnvironmentVariable("MYSQLPORT");
+    var dbUrl = Environment.GetEnvironmentVariable("MYSQL_URL");
+    if (!string.IsNullOrEmpty(dbUrl))
+    {
+        var uri = new Uri(dbUrl);
+        var dbHost = uri.Host;
+        var dbPort = uri.Port;
+        var userInfo = uri.UserInfo.Split(':');
+        var dbUser = userInfo[0];
+        var dbPassword = userInfo[1];
+        var dbName = uri.AbsolutePath.Trim('/');
 
-    connectionString = $"Server={dbHost};Port={dbPort};Database={dbName};User={dbUser};Password={dbPassword};";
+        connectionString = $"Server={dbHost};Port={dbPort};Database={dbName};User={dbUser};Password={dbPassword};";
+    }
 }
 else
 {
