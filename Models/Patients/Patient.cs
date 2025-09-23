@@ -25,7 +25,7 @@ namespace JuanBosch.App.Models.Patients
         public PatientDirection? PatientDirection { get; set; }
         public string PatientEmergencieContact { get; set; }
 
-        public string PatientFisRecord { get; set; }
+        public string? PatientFisRecord { get; set; }
         public int BloodId { get; set; }
         public Blood Blood { get; set; }
         public MedicRecord MedicRecord { get; set; }   
