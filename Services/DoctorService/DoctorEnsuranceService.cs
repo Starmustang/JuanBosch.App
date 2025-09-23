@@ -14,20 +14,20 @@ namespace JuanBosch.App.Services.DoctorService
         _context = context;
     }
 
-        public Task<DoctorEnsurancesReadDto> CreateDoctorEnsuranceAsync(DoctorEnsurancesCreateDto dto)
+        public async Task<DoctorEnsurancesReadDto> CreateDoctorEnsuranceAsync(DoctorEnsurancesCreateDto dto)
         {
             var entity = dto.ToCreateDoctorEnsurance();
             _context.DoctorEnsurances.Add(entity);
-            _context.SaveChangesAsync();
-            return GetDoctorEnsuranceByIdAsync(entity.DoctorEnsuranceId)
+            await _context.SaveChangesAsync();
+            return await GetDoctorEnsuranceByIdAsync(entity.DoctorEnsuranceId)
                    ?? throw new InvalidOperationException("Failed to retrieve created doctor ensurance");
         }
 
         public async Task<bool> DeleteDoctorEnsuranceAsync(int id)
         {
-            var entity = _context.DoctorEnsurances
+            var entity = await _context.DoctorEnsurances
             .Where(d => d.DoctorEnsuranceId == id)
-            .FirstOrDefault();
+            .FirstOrDefaultAsync();
             if (entity == null)
             {
                 throw new InvalidOperationException("Doctor ensurance not found");
@@ -37,27 +37,35 @@ namespace JuanBosch.App.Services.DoctorService
             return true;
         }
 
-        public Task<List<DoctorEnsurancesReadDto>> GetAllDoctorEnsuranceAsync()
+        public async Task<List<DoctorEnsurancesReadDto>> GetAllDoctorEnsuranceAsync()
         {
-            return _context.DoctorEnsurances
-            .Select(d => DoctorEnsuranceMapper.ToReadDoctorEnsurance(d))
-            .ToListAsync(); 
+            return await _context.DoctorEnsurances
+                .Include(d => d.DoctorMedic)
+                .Include(d => d.ArsEnsurance)
+                .Select(d => DoctorEnsuranceMapper.ToReadDoctorEnsurance(d))
+                .ToListAsync();
         }
 
         public async Task<DoctorEnsurancesReadDto> GetDoctorEnsuranceByIdAsync(int id)
         {
-            return await _context.DoctorEnsurances
-            .Where(d => d.DoctorEnsuranceId == id)
-            .Select(d => DoctorEnsuranceMapper.ToReadDoctorEnsurance(d))
-            .FirstOrDefaultAsync()
-            ?? throw new InvalidOperationException("Doctor ensurance not found");
+            var doctorEnsurance = await _context.DoctorEnsurances
+                .Include(d => d.DoctorMedic)
+                .Include(d => d.ArsEnsurance)
+                .FirstOrDefaultAsync(d => d.DoctorEnsuranceId == id);
+
+            if (doctorEnsurance == null)
+            {
+                throw new InvalidOperationException("Doctor ensurance not found");
+            }
+
+            return DoctorEnsuranceMapper.ToReadDoctorEnsurance(doctorEnsurance);
         }
 
-        public Task<DoctorEnsurancesReadDto> UpdateDoctorEnsuranceAsync(int id, DoctorEnsurancesUpdateDto dto)
+        public async Task<DoctorEnsurancesReadDto> UpdateDoctorEnsuranceAsync(int id, DoctorEnsurancesUpdateDto dto)
         {
-            var existingDoctorEnsurance = _context.DoctorEnsurances
+            var existingDoctorEnsurance = await _context.DoctorEnsurances
             .Where(d => d.DoctorEnsuranceId == id)
-            .FirstOrDefault();
+            .FirstOrDefaultAsync();
             if (existingDoctorEnsurance == null)
             {
                 throw new InvalidOperationException("Doctor ensurance not found");
@@ -66,8 +74,8 @@ namespace JuanBosch.App.Services.DoctorService
             existingDoctorEnsurance.ArsEnsuranceId = dto.ArsEnsuranceId;
             existingDoctorEnsurance.DoctorId = dto.DoctorId;
             _context.DoctorEnsurances.Update(existingDoctorEnsurance);
-            _context.SaveChangesAsync();
-            return GetDoctorEnsuranceByIdAsync(id);
+            await _context.SaveChangesAsync();
+            return await GetDoctorEnsuranceByIdAsync(id);
         }
     }
 }
