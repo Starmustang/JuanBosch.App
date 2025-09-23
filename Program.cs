@@ -61,10 +61,29 @@ builder.Services.AddScoped<IArsPlanService, ArsPlanService>();
 builder.Services.AddScoped<IDoctorEnsuranceService, DoctorEnsuranceService>();
 builder.Services.AddScoped<IDoctorService, DoctorService>();
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+string? connectionString;
+
+if (builder.Environment.IsProduction())
+{
+    var dbHost = Environment.GetEnvironmentVariable("MYSQLHOST");
+    var dbUser = Environment.GetEnvironmentVariable("MYSQLUSER");
+    var dbPassword = Environment.GetEnvironmentVariable("MYSQLPASSWORD");
+    var dbName = Environment.GetEnvironmentVariable("MYSQLDATABASE");
+    var dbPort = Environment.GetEnvironmentVariable("MYSQLPORT");
+
+    connectionString = $"Server={dbHost};Port={dbPort};Database={dbName};User={dbUser};Password={dbPassword};";
+}
+else
+{
+    connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+}
+
 builder.Services.AddDbContext<DataContext>(options =>
 {
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+    if (!string.IsNullOrEmpty(connectionString))
+    {
+        options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+    }
 });
    
 builder.Services.AddSwaggerGen(c =>
