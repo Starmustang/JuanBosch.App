@@ -1,26 +1,27 @@
-using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.EntityFrameworkCore;
-using Pomelo.EntityFrameworkCore.MySql;
 using JuanBosch.App.Models.DataContext;
-using JuanBosch.App.Services.Interface;
 using JuanBosch.App.Services;
-using JuanBosch.App.Services.MedicEvaluationService;
-using JuanBosch.App.Services.Interface.IMedicEvaluationService;
-using JuanBosch.App.Services.Interface.IAdressService;
 using JuanBosch.App.Services.AddressService;
+using JuanBosch.App.Services.ArsService;
 using JuanBosch.App.Services.BloodService;
+using JuanBosch.App.Services.DatesService;
+using JuanBosch.App.Services.DoctorService;
+using JuanBosch.App.Services.Interface;
+using JuanBosch.App.Services.Interface.IAdressService;
+using JuanBosch.App.Services.Interface.IArsService;
 using JuanBosch.App.Services.Interface.IBloodService;
 using JuanBosch.App.Services.Interface.IDateService;
-using JuanBosch.App.Services.DatesService;
-using JuanBosch.App.Services.MedicRecordService;
-using JuanBosch.App.Services.Interface.IMedicRecordService;
-using JuanBosch.App.Services.ArsService;
-using JuanBosch.App.Services.Interface.IArsService;
 using JuanBosch.App.Services.Interface.IDoctorService;
-using JuanBosch.App.Services.DoctorService;
+using JuanBosch.App.Services.Interface.IMedicEvaluationService;
+using JuanBosch.App.Services.Interface.IMedicRecordService;
+using JuanBosch.App.Services.MedicEvaluationService;
+using JuanBosch.App.Services.MedicRecordService;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
+using Pomelo.EntityFrameworkCore.MySql;
+using System;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -92,6 +93,12 @@ if (app.Environment.IsDevelopment())
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Hospital Juan Bosch API v1");
         c.RoutePrefix = string.Empty; // Set Swagger UI at the app's root
     });
+}
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<DataContext>();
+    db.Database.Migrate();
 }
 
 app.UseHttpsRedirection();
