@@ -21,6 +21,7 @@ namespace JuanBosch.App.Dtos.AddressDtos
     
     public class PatientDirectionUpdateDto
     {
+        public int AddressId { get; set; }
         public string HouseNumber { get; set; } = string.Empty;
         public string HouseStreet { get; set; } = string.Empty;
         public int SectorId { get; set; }
