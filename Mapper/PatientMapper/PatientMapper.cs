@@ -26,7 +26,8 @@ namespace JuanBosch.App.Mapper
                 AddressId = patientCreateDto.AddressId,
                 BloodId = patientCreateDto.BloodId,
                 PatientEmergencieContact = patientCreateDto.PatientEmergencieContact,
-                PatientFisRecord = patientCreateDto.PatientFirstRecord
+                PatientFisRecord = patientCreateDto.PatientFirstRecord,
+                ArsPlansId = patientCreateDto.ArsPlansId
             };
         }
         public static PatientReadDto ToReadPatient(this Patient patient)
