@@ -14,7 +14,7 @@ namespace JuanBosch.App.Models.Dates
         public required DoctorMedic Doctor { get; set; }
         public int DoctorId { get; set; }
         public DateTime DateMedicDate { get; set; }
-        public required string HospitalMedicDate { get; set; }
+        public string? HospitalMedicDate { get; set; }
         public ConsultationType ConsultationType { get; set; }
         public required DateDoctor DateDoctor { get; set; }
         public int DateDoctorId { get; set; }

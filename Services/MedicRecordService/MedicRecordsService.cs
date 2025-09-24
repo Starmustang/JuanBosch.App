@@ -17,6 +17,7 @@ namespace JuanBosch.App.Services.MedicRecordService
         public async Task<List<MedicRecordReadDto>> GetAllMedicRecordsAsync()
         {
             return await _context.MedicRecords
+            .Include(p => p.Patient)
             .Select(p => MedicRecordsMapper.ToReadMedicRecord(p))
             .ToListAsync();
         }
@@ -26,6 +27,7 @@ namespace JuanBosch.App.Services.MedicRecordService
             return await _context.MedicRecords
             .AsNoTracking()
             .Where(p => p.RecordId == id)
+            .Include(p => p.Patient)
             .Select(p => MedicRecordsMapper.ToReadMedicRecord(p))
             .FirstOrDefaultAsync();
         }

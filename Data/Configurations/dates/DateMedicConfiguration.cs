@@ -17,7 +17,7 @@ namespace JuanBosch.App.Data.Configurations.dates
             .IsRequired();
 
             builder.Property(d => d.HospitalMedicDate)
-            .IsRequired()
+            .IsRequired(false)
             .HasMaxLength(25);
 
             builder.HasOne(d => d.Patient)

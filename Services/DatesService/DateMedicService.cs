@@ -17,6 +17,9 @@ namespace JuanBosch.App.Services.DatesService
         {
             return await _context.DateMedics
                 .Where(d => d.DateMedicId == id)
+                .Include(d => d.Patient)
+                .Include(d => d.Doctor)
+                .Include(d => d.DateDoctor) 
                 .Select(d => DateMedicMapper.ToReadDateMedic(d))
                 .FirstOrDefaultAsync();
         }
@@ -24,6 +27,9 @@ namespace JuanBosch.App.Services.DatesService
         public async Task<List<DateMedicReadDto>> GetAllDateMedicsAsync()
         {
             return await _context.DateMedics
+                .Include(d => d.Patient)
+                .Include(d => d.Doctor)
+                .Include(d => d.DateDoctor) 
                 .Select(d => DateMedicMapper.ToReadDateMedic(d))
                 .ToListAsync();
         }

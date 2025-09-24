@@ -5,7 +5,7 @@ namespace JuanBosch.App.Dtos.Dates
         public int PatientId { get; set; }
         public int DoctorId { get; set; }
         public DateTime DateMedicDate { get; set; }
-        public string HospitalMedicDate { get; set; }
+        public string? HospitalMedicDate { get; set; }
         public int ConsultationTypeId { get; set; }
         public int DateDoctorId { get; set; }
     }
@@ -18,7 +18,7 @@ namespace JuanBosch.App.Dtos.Dates
         public int DoctorId { get; set; }
         public required string DoctorName { get; set; }
         public DateTime DateMedicDate { get; set; }
-        public required string HospitalMedicDate { get; set; }
+        public string? HospitalMedicDate { get; set; }
         public int ConsultationTypeId { get; set; }
         public int DateDoctorId { get; set; }
     }
@@ -29,7 +29,7 @@ namespace JuanBosch.App.Dtos.Dates
         public int PatientId { get; set; }
         public int DoctorId { get; set; }
         public DateTime DateMedicDate { get; set; }
-        public string HospitalMedicDate { get; set; }
+        public string? HospitalMedicDate { get; set; }
         public int ConsultationTypeId { get; set; }
         public int DateDoctorId { get; set; }
     }
