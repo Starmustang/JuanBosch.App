@@ -47,7 +47,7 @@ namespace JuanBosch.App.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<PatientReadDto>> UpdatePatientAsync(int id, PatientReadDto patientDto)
+        public async Task<ActionResult<PatientUpdateDto>> UpdatePatientAsync(int id, PatientUpdateDto patientDto)
         {
             var patient = await _patientService.UpdatePatientAsync(id, patientDto);
             return Ok(patient);

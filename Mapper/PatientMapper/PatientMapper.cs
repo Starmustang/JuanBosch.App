@@ -43,12 +43,17 @@ namespace JuanBosch.App.Mapper
                 PatientLastName = patient.PatientLastName,
                 PatientIdCard = patient.PatientIdCard,
                 PatientPassport = patient.PatientPassport,
+                PatientBirthDate = patient.PatientBirthDate,
+                PatientGender = patient.PatientGender,
+                PatientEmail = patient.PatientEmail,
                 PatientPhone = patient.PatientPhone,
-                PatientBirthDate = patient?.PatientBirthDate.Value,
-                PatientGender = patient?.PatientGender,
-                PatientEmail = patient?.PatientEmail,
-                AddressId = patient?.AddressId,     
-                BloodType = patient?.Blood?.BloodType ?? string.Empty           
+                ArsPlansId = patient.ArsPlansId,
+                ArsPlansName = patient.ArsPlans?.ArsPlansName ?? string.Empty,
+                AddressId = patient.AddressId,
+                PatientEmergencieContact = patient.PatientEmergencieContact,
+                PatientFirstRecord = patient.PatientFisRecord,
+                BloodId = patient.BloodId,
+                BloodType = patient.Blood?.BloodType ?? string.Empty
             };
         }
     }

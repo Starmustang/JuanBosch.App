@@ -8,7 +8,7 @@ namespace JuanBosch.App.Services.Interface
         Task<List<PatientReadDto>> GetAllPatientsAsync();
         Task<PatientReadDto> GetPatientByIdAsync(int id);
         Task<PatientCreateDto> CreatePatientAsync(PatientCreateDto patient);
-        Task<PatientReadDto> UpdatePatientAsync(int id, PatientReadDto patient);
+        Task<PatientUpdateDto> UpdatePatientAsync(int id, PatientUpdateDto patient);
         Task<bool> DeletePatientAsync(int id);
     }
 }

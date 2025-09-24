@@ -56,9 +56,8 @@ namespace JuanBosch.App.Dtos.Patient
         public string? PatientGender { get; set; }
         public string? PatientEmail { get; set; }
         public string? PatientPhone { get; set; }
-        public int ArsPlansId { get; set; }
-        public string ArsPlansName { get; set; }
-        public int? AddressId { get; set; }        
+        public int ArsPlansId { get; set; }        
+        public int? AddressId { get; set; }                
         public string PatientEmergencieContact { get; set; }
         public string? PatientFirstRecord { get; set; }
         public int BloodId { get; set; }

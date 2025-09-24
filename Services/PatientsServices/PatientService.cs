@@ -17,18 +17,28 @@ namespace JuanBosch.App.Services
         
         public async Task<List<PatientReadDto>> GetAllPatientsAsync()
         {
-            return await _context.Patients
-            .Include(p => p.Blood)
-            .Select(p => PatientMapper.ToReadPatient(p))
-            .ToListAsync();
+            var patients = await _context.Patients
+                .Include(p => p.Blood)
+                .Include(p => p.ArsPlans)
+                .Include(p => p.PatientDirection)
+                .ToListAsync();
+            return patients.Select(p => PatientMapper.ToReadPatient(p)).ToList();
         }
 
         public async Task<PatientReadDto> GetPatientByIdAsync(int id)
         {
-            return await _context.Patients
-            .Include(p => p.Blood)
-            .Select(p => PatientMapper.ToReadPatient(p))
-            .FirstOrDefaultAsync(p => p.PatientId == id);
+            var patient = await _context.Patients
+                .Include(p => p.Blood)
+                .Include(p => p.ArsPlans)
+                .Include(p => p.PatientDirection)
+                .FirstOrDefaultAsync(p => p.PatientId == id);
+
+            if (patient == null)
+            {
+                return null;
+            }
+
+            return PatientMapper.ToReadPatient(patient);
         }
 
         public async Task<PatientCreateDto> CreatePatientAsync(PatientCreateDto patient)
@@ -39,7 +49,7 @@ namespace JuanBosch.App.Services
             return patient;
         }
 
-        public async Task<PatientReadDto> UpdatePatientAsync(int id, PatientReadDto patient)
+        public async Task<PatientUpdateDto> UpdatePatientAsync(int id, PatientUpdateDto patient)
         {
             var existingPatient = await _context.Patients.FindAsync(id);
             if (existingPatient == null)
