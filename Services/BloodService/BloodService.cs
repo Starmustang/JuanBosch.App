@@ -1,6 +1,6 @@
 using JuanBosch.App.Dtos.Bloods;
 using JuanBosch.App.Mapper.Bloods;
-using JuanBosch.App.Models.DataContext;
+using JuanBosch.App.Models.Persistence;
 using JuanBosch.App.Services.Interface.IBloodService;
 using Microsoft.EntityFrameworkCore;
 

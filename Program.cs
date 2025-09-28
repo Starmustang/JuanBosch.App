@@ -1,4 +1,7 @@
-using JuanBosch.App.Models.DataContext;
+using JuanBosch.App.Models.Persistence;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using JuanBosch.App.Services;
 using JuanBosch.App.Services.AddressService;
 using JuanBosch.App.Services.ArsService;
@@ -22,6 +25,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Pomelo.EntityFrameworkCore.MySql;
 using System;
+using JuanBosch.App.Models.Users;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -44,6 +50,34 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)),
+            ValidateIssuer = false,
+            ValidateAudience = false
+        };
+    });
+
+// Configure Identity
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
+{
+    // Password settings (customize as needed)
+    options.Password.RequireDigit = true;
+    options.Password.RequiredLength = 8;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireLowercase = true;
+
+    // User settings
+    options.User.RequireUniqueEmail = true;
+})
+.AddEntityFrameworkStores<DataContext>()
+.AddDefaultTokenProviders();
+
 builder.Services.AddScoped<IPatientService, PatientService>();
 builder.Services.AddScoped<ICountryService, CountryService>();
 builder.Services.AddScoped<IMedicEvaluationService, MedicEvaluationService>();
@@ -60,6 +94,8 @@ builder.Services.AddScoped<IArsEnsuranceService, ArsEnsuranceService>();
 builder.Services.AddScoped<IArsPlanService, ArsPlanService>();
 builder.Services.AddScoped<IDoctorEnsuranceService, DoctorEnsuranceService>();
 builder.Services.AddScoped<IDoctorService, DoctorService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 string? connectionString = null;
 
@@ -129,12 +165,17 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<DataContext>();
     db.Database.Migrate();
+
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
+    await Seed.SeedUsers(userManager, roleManager);
 }
 
 app.UseHttpsRedirection();
 
 app.UseCors(MyAllowSpecificOrigins);
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

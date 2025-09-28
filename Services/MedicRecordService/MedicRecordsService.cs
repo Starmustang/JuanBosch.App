@@ -1,6 +1,6 @@
 using JuanBosch.App.Dtos.MedicRecordDtos;
 using JuanBosch.App.Mapper.MedicRecordMapper;
-using JuanBosch.App.Models.DataContext;
+using JuanBosch.App.Models.Persistence;
 using JuanBosch.App.Services.Interface.IMedicRecordService;
 using Microsoft.EntityFrameworkCore;
 

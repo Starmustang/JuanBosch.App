@@ -1,6 +1,6 @@
 using JuanBosch.App.Dtos.Ars;
 using JuanBosch.App.Mapper.ArsMapaper;
-using JuanBosch.App.Models.DataContext;
+using JuanBosch.App.Models.Persistence;
 using JuanBosch.App.Services.Interface.IArsService;
 using Microsoft.EntityFrameworkCore;
 

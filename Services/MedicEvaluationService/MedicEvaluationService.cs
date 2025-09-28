@@ -1,6 +1,6 @@
 using JuanBosch.App.Dtos.MedicEvaluation;
 using JuanBosch.App.Mapper;
-using JuanBosch.App.Models.DataContext;
+using JuanBosch.App.Models.Persistence;
 using JuanBosch.App.Services.Interface.IMedicEvaluationService;
 using Microsoft.EntityFrameworkCore;
 

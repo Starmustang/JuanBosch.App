@@ -1,7 +1,7 @@
 using JuanBosch.App.Dtos.Patient;
 using JuanBosch.App.Mapper;
 using JuanBosch.App.Models;
-using JuanBosch.App.Models.DataContext;
+using JuanBosch.App.Models.Persistence;
 using JuanBosch.App.Services.Interface;
 using Microsoft.EntityFrameworkCore;
 

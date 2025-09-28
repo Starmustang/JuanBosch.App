@@ -1,7 +1,7 @@
 using JuanBosch.App.Dtos.AddressDtos;
 using JuanBosch.App.Mapper.AddressMapper;
 using JuanBosch.App.Models.Address;
-using JuanBosch.App.Models.DataContext;
+using JuanBosch.App.Models.Persistence;
 using JuanBosch.App.Services.Interface.IAdressService;
 using Microsoft.EntityFrameworkCore;
 

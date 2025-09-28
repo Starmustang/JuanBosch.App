@@ -1,6 +1,6 @@
 using JuanBosch.App.Dtos.Doctors;
 using JuanBosch.App.Mapper.DoctorsMapper;
-using JuanBosch.App.Models.DataContext;
+using JuanBosch.App.Models.Persistence;
 using JuanBosch.App.Services.Interface.IDoctorService;
 using Microsoft.EntityFrameworkCore;
 

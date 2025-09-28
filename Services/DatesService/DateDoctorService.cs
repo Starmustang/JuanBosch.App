@@ -1,6 +1,6 @@
 using JuanBosch.App.Dtos.Dates;
 using JuanBosch.App.Mapper.DatesMapper;
-using JuanBosch.App.Models.DataContext;
+using JuanBosch.App.Models.Persistence;
 using JuanBosch.App.Services.Interface.IDateService;
 using Microsoft.EntityFrameworkCore;
 

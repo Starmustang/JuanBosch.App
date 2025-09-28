@@ -1,4 +1,4 @@
-using JuanBosch.App.Models.DataContext;
+using JuanBosch.App.Models.Persistence;
 using Microsoft.AspNetCore.Mvc;
 using JuanBosch.App.Services.Interface;
 using JuanBosch.App.Dtos.Patient;

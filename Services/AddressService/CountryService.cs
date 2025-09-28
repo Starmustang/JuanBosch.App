@@ -2,7 +2,7 @@ using JuanBosch.App.Dtos.AddressDtos;
 using JuanBosch.App.Dtos.Country;
 using JuanBosch.App.Mapper.AddressMapper;
 using JuanBosch.App.Models.Address;
-using JuanBosch.App.Models.DataContext;
+using JuanBosch.App.Models.Persistence;
 using JuanBosch.App.Services.Interface;
 using Microsoft.EntityFrameworkCore;
 
