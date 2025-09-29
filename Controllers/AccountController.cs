@@ -12,6 +12,7 @@ namespace JuanBosch.App.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Produces("application/json")]
     public class AccountController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -121,24 +122,44 @@ namespace JuanBosch.App.Controllers
 
         private async Task<IActionResult> LoginCore(LoginModel model)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
-            }
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
 
-            var user = await _userService.FindUserByUserNameAsync(model.UserName);
-            // Fallback: if "userName" actually contains an email, try email lookup
-            if (user == null && !string.IsNullOrWhiteSpace(model.UserName) && model.UserName.Contains("@"))
+                Console.WriteLine($"Login attempt for: '{model.UserName}'");
+
+                var user = await _userService.FindUserByUserNameAsync(model.UserName);
+                // Fallback: if "userName" actually contains an email, try email lookup
+                if (user == null && !string.IsNullOrWhiteSpace(model.UserName) && model.UserName.Contains("@"))
+                {
+                    user = await _userService.FindUserByEmailAsync(model.UserName);
+                }
+
+                if (user == null)
+                {
+                    Console.WriteLine("Login failed: user not found");
+                    return Unauthorized(new { message = "Invalid credentials" });
+                }
+
+                var passwordValid = await _userService.CheckPasswordAsync(user, model.Password);
+                if (!passwordValid)
+                {
+                    Console.WriteLine("Login failed: invalid password");
+                    return Unauthorized(new { message = "Invalid credentials" });
+                }
+
+                var token = await _tokenService.CreateToken(user);
+                Console.WriteLine("Login succeeded");
+                return Ok(new { token });
+            }
+            catch (Exception ex)
             {
-                user = await _userService.FindUserByEmailAsync(model.UserName);
+                Console.WriteLine($"Login error: {ex.Message}\n{ex.StackTrace}");
+                return StatusCode(500, new { message = "Login failed due to a server error." });
             }
-
-            if (user != null && await _userService.CheckPasswordAsync(user, model.Password))
-            {
-                return Ok(new { token = await _tokenService.CreateToken(user) });
-            }
-
-            return Unauthorized(new { message = "Invalid credentials" });
         }
     }
 
