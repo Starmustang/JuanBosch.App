@@ -1,6 +1,7 @@
 using JuanBosch.App.Models.Users;
 using JuanBosch.App.Services.Interface;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -19,6 +20,7 @@ namespace JuanBosch.App.Controllers
             _tokenService = tokenService;
         }
 
+        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterModel model)
         {
@@ -50,8 +52,21 @@ namespace JuanBosch.App.Controllers
             return BadRequest(ModelState);
         }
 
+        // Accept JSON payloads
+        [AllowAnonymous]
         [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginModel model)
+        [Consumes("application/json")]
+        public async Task<IActionResult> LoginJson([FromBody] LoginModel model)
+            => await LoginCore(model);
+
+        // Accept x-www-form-urlencoded payloads (e.g., NextAuth Credentials provider)
+        [AllowAnonymous]
+        [HttpPost("login")]
+        [Consumes("application/x-www-form-urlencoded")]
+        public async Task<IActionResult> LoginForm([FromForm] LoginModel model)
+            => await LoginCore(model);
+
+        private async Task<IActionResult> LoginCore(LoginModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -59,6 +74,11 @@ namespace JuanBosch.App.Controllers
             }
 
             var user = await _userService.FindUserByUserNameAsync(model.UserName);
+            // Fallback: if "userName" actually contains an email, try email lookup
+            if (user == null && !string.IsNullOrWhiteSpace(model.UserName) && model.UserName.Contains("@"))
+            {
+                user = await _userService.FindUserByEmailAsync(model.UserName);
+            }
 
             if (user != null && await _userService.CheckPasswordAsync(user, model.Password))
             {
