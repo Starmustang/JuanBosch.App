@@ -167,11 +167,20 @@ using (var scope = app.Services.CreateScope())
     
     // Handle migrations based on environment
     var environment = app.Environment;
+    bool migrationSuccessful = false;
     
     if (environment.IsDevelopment())
     {
         // In development, always try to migrate
-        db.Database.Migrate();
+        try
+        {
+            db.Database.Migrate();
+            migrationSuccessful = true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Migration failed in development: {ex.Message}");
+        }
     }
     else
     {
@@ -184,23 +193,51 @@ using (var scope = app.Services.CreateScope())
             {
                 db.Database.Migrate();
                 Console.WriteLine("Migrations applied successfully.");
+                migrationSuccessful = true;
             }
             catch (MySqlConnector.MySqlException ex) when (ex.Message.Contains("already exists"))
             {
                 Console.WriteLine($"Warning: {ex.Message}");
-                Console.WriteLine("Database tables already exist. This might indicate the migration history is out of sync.");
-                Console.WriteLine("Consider manually updating the __EFMigrationsHistory table.");
+                Console.WriteLine("Database tables already exist. Attempting to ensure database is ready...");
+                
+                // Try to ensure database is created even if migration fails
+                try
+                {
+                    db.Database.EnsureCreated();
+                    migrationSuccessful = true;
+                }
+                catch (Exception ensureEx)
+                {
+                    Console.WriteLine($"Failed to ensure database creation: {ensureEx.Message}");
+                }
             }
         }
         else
         {
             Console.WriteLine("Database is up to date.");
+            migrationSuccessful = true;
         }
     }
-
-    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
-    await Seed.SeedUsers(userManager, roleManager);
+    
+    // Only proceed with seeding if database is ready
+    if (migrationSuccessful)
+    {
+        try
+        {
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
+            await Seed.SeedUsers(userManager, roleManager);
+            Console.WriteLine("Database seeding completed successfully.");
+        }
+        catch (Exception seedEx)
+        {
+            Console.WriteLine($"Seeding failed: {seedEx.Message}");
+        }
+    }
+    else
+    {
+        Console.WriteLine("Skipping database seeding due to migration issues.");
+    }
 }
 
 app.UseHttpsRedirection();
