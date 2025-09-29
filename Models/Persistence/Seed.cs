@@ -11,7 +11,7 @@ namespace JuanBosch.App.Models.Persistence
         {
             if (!roleManager.Roles.Any())
             {
-                var roles = new[] { "Admin", "Doctor", "Patient" };
+                var roles = new[] { "Administrador", "usuario" };
                 foreach (var role in roles)
                 {
                     await roleManager.CreateAsync(new ApplicationRole(role));
@@ -29,8 +29,8 @@ namespace JuanBosch.App.Models.Persistence
                     EmailConfirmed = true
                 };
 
-                await userManager.CreateAsync(adminUser, "Pa$$w0rd");
-                await userManager.AddToRoleAsync(adminUser, "Admin");
+                await userManager.CreateAsync(adminUser, "123456789wW#");
+                await userManager.AddToRoleAsync(adminUser, "Administrador");
             }
         }
     }

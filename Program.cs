@@ -87,7 +87,6 @@ builder.Services.AddScoped<IPatientDirectionService, PatientDirectionService>();
 builder.Services.AddScoped<IDoctorAddressService, DoctorAddressService>();
 builder.Services.AddScoped<IProvinceService, ProvinceService>();
 builder.Services.AddScoped<IBloodService, BloodService>();
-builder.Services.AddScoped<IDateDoctorsService, DateDoctorService>();
 builder.Services.AddScoped<IDateMedicService, DateMedicService>();
 builder.Services.AddScoped<IMedicRecordsService, MedicRecordsService>();
 builder.Services.AddScoped<IArsEnsuranceService, ArsEnsuranceService>();
@@ -96,6 +95,7 @@ builder.Services.AddScoped<IDoctorEnsuranceService, DoctorEnsuranceService>();
 builder.Services.AddScoped<IDoctorService, DoctorService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IRoleService, RoleService>();
 
 string? connectionString = null;
 
