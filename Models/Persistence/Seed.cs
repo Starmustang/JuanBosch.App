@@ -11,7 +11,7 @@ namespace JuanBosch.App.Models.Persistence
         {
             if (!roleManager.Roles.Any())
             {
-                var roles = new[] { "Administrador", "usuario" };
+                var roles = new[] { "Administrador", "usuario", "auxiliar" };
                 foreach (var role in roles)
                 {
                     await roleManager.CreateAsync(new ApplicationRole(role));
