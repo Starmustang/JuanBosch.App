@@ -33,7 +33,18 @@ namespace JuanBosch.App.Services
                 new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName!),
             };
 
-            var roles = await _userManager.GetRolesAsync(user);
+            // Get user roles with error handling
+            IList<string> roles;
+            try
+            {
+                roles = await _userManager.GetRolesAsync(user);
+                Console.WriteLine($"Retrieved {roles.Count} roles for user {user.UserName}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to get roles for user {user.UserName}: {ex.Message}");
+                roles = new List<string>(); // Continue with empty roles to prevent login failure
+            }
 
             foreach (var role in roles)
             {

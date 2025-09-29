@@ -12,25 +12,37 @@ namespace JuanBosch.App.Models.Persistence
         {
             try
             {
-                // Check if roles exist, if not create them
-                var existingRoles = roleManager.Roles.ToList();
-                if (!existingRoles.Any())
+                Console.WriteLine("Starting user seeding process...");
+                
+                // Always ensure roles exist
+                var requiredRoles = new[] { "Administrador", "usuario", "auxiliar" };
+                foreach (var roleName in requiredRoles)
                 {
-                    var roles = new[] { "Administrador", "usuario", "auxiliar" };
-                    foreach (var role in roles)
+                    if (!await roleManager.RoleExistsAsync(roleName))
                     {
-                        if (!await roleManager.RoleExistsAsync(role))
+                        var role = new ApplicationRole(roleName);
+                        var roleResult = await roleManager.CreateAsync(role);
+                        if (roleResult.Succeeded)
                         {
-                            await roleManager.CreateAsync(new ApplicationRole(role));
+                            Console.WriteLine($"Created role: {roleName}");
                         }
+                        else
+                        {
+                            Console.WriteLine($"Failed to create role {roleName}: {string.Join(", ", roleResult.Errors.Select(e => e.Description))}");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Role already exists: {roleName}");
                     }
                 }
 
-                // Check if users exist, if not create admin user
-                var existingUsers = userManager.Users.ToList();
-                if (!existingUsers.Any())
+                // Always ensure admin user exists
+                var adminUser = await userManager.FindByNameAsync("admin");
+                if (adminUser == null)
                 {
-                    var adminUser = new ApplicationUser
+                    Console.WriteLine("Admin user not found. Creating admin user...");
+                    adminUser = new ApplicationUser
                     {
                         UserName = "admin",
                         Email = "admin@juanbosch.com",
@@ -42,14 +54,52 @@ namespace JuanBosch.App.Models.Persistence
                     var result = await userManager.CreateAsync(adminUser, "123456789wW#");
                     if (result.Succeeded)
                     {
-                        await userManager.AddToRoleAsync(adminUser, "Administrador");
+                        Console.WriteLine("Admin user created successfully");
+                        
+                        // Ensure admin has the Administrador role
+                        if (!await userManager.IsInRoleAsync(adminUser, "Administrador"))
+                        {
+                            var roleResult = await userManager.AddToRoleAsync(adminUser, "Administrador");
+                            if (roleResult.Succeeded)
+                            {
+                                Console.WriteLine("Admin user added to Administrador role");
+                            }
+                            else
+                            {
+                                Console.WriteLine($"Failed to add admin to role: {string.Join(", ", roleResult.Errors.Select(e => e.Description))}");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Failed to create admin user: {string.Join(", ", result.Errors.Select(e => e.Description))}");
                     }
                 }
+                else
+                {
+                    Console.WriteLine("Admin user already exists");
+                    
+                    // Ensure existing admin has the Administrador role
+                    if (!await userManager.IsInRoleAsync(adminUser, "Administrador"))
+                    {
+                        var roleResult = await userManager.AddToRoleAsync(adminUser, "Administrador");
+                        if (roleResult.Succeeded)
+                        {
+                            Console.WriteLine("Added Administrador role to existing admin user");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Failed to add role to existing admin: {string.Join(", ", roleResult.Errors.Select(e => e.Description))}");
+                        }
+                    }
+                }
+                
+                Console.WriteLine("User seeding process completed");
             }
             catch (Exception ex)
             {
-                // Log the error but don't crash the application
                 Console.WriteLine($"Error during user seeding: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
                 throw; // Re-throw to be handled by the calling code
             }
         }
