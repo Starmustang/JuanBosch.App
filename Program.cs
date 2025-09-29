@@ -165,57 +165,89 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<DataContext>();
     
-    // Handle migrations based on environment
+    // Handle migrations - force clean migration for fresh database
     var environment = app.Environment;
     bool migrationSuccessful = false;
     
-    if (environment.IsDevelopment())
+    Console.WriteLine("Starting database migration process...");
+    
+    // TEMPORARY: Set to true to force database reset (remove after first deployment)
+    bool forceReset = Environment.GetEnvironmentVariable("FORCE_DB_RESET") == "true";
+    
+    if (forceReset)
     {
-        // In development, always try to migrate
+        Console.WriteLine("FORCE_DB_RESET is enabled. Recreating database...");
         try
         {
-            db.Database.Migrate();
-            migrationSuccessful = true;
+            db.Database.EnsureDeleted();
+            Console.WriteLine("Database deleted successfully.");
         }
-        catch (Exception ex)
+        catch (Exception deleteEx)
         {
-            Console.WriteLine($"Migration failed in development: {ex.Message}");
+            Console.WriteLine($"Warning: Could not delete database: {deleteEx.Message}");
         }
     }
-    else
+    
+    try
     {
-        // In production, be more careful with migrations
-        var pendingMigrations = db.Database.GetPendingMigrations();
-        if (pendingMigrations.Any())
+        // Check if database exists and is empty (fresh reset scenario)
+        var canConnect = db.Database.CanConnect();
+        Console.WriteLine($"Database connection status: {canConnect}");
+        
+        if (canConnect)
         {
-            Console.WriteLine($"Found {pendingMigrations.Count()} pending migrations.");
-            try
+            var pendingMigrations = db.Database.GetPendingMigrations().ToList();
+            var appliedMigrations = db.Database.GetAppliedMigrations().ToList();
+            
+            Console.WriteLine($"Applied migrations: {appliedMigrations.Count}");
+            Console.WriteLine($"Pending migrations: {pendingMigrations.Count}");
+            
+            if (pendingMigrations.Any())
             {
-                db.Database.Migrate();
-                Console.WriteLine("Migrations applied successfully.");
-                migrationSuccessful = true;
-            }
-            catch (MySqlConnector.MySqlException ex) when (ex.Message.Contains("already exists"))
-            {
-                Console.WriteLine($"Warning: {ex.Message}");
-                Console.WriteLine("Database tables already exist. Attempting to ensure database is ready...");
+                Console.WriteLine("Applying pending migrations...");
+                foreach (var migration in pendingMigrations)
+                {
+                    Console.WriteLine($"- {migration}");
+                }
                 
-                // Try to ensure database is created even if migration fails
-                try
-                {
-                    db.Database.EnsureCreated();
-                    migrationSuccessful = true;
-                }
-                catch (Exception ensureEx)
-                {
-                    Console.WriteLine($"Failed to ensure database creation: {ensureEx.Message}");
-                }
+                db.Database.Migrate();
+                Console.WriteLine("All migrations applied successfully.");
             }
+            else if (!appliedMigrations.Any())
+            {
+                Console.WriteLine("No migration history found. Creating database schema...");
+                db.Database.Migrate();
+                Console.WriteLine("Database schema created successfully.");
+            }
+            else
+            {
+                Console.WriteLine("Database is up to date.");
+            }
+            
+            migrationSuccessful = true;
         }
         else
         {
-            Console.WriteLine("Database is up to date.");
+            Console.WriteLine("Cannot connect to database. Creating database...");
+            db.Database.Migrate();
             migrationSuccessful = true;
+            Console.WriteLine("Database created and migrated successfully.");
+        }
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Migration error: {ex.Message}");
+        Console.WriteLine($"Stack trace: {ex.StackTrace}");
+        
+        // In case of error, try to log more details
+        try
+        {
+            var dbConnectionString = db.Database.GetConnectionString();
+            Console.WriteLine($"Connection string (masked): {dbConnectionString?.Substring(0, Math.Min(50, dbConnectionString.Length))}...");
+        }
+        catch
+        {
+            Console.WriteLine("Could not retrieve connection string details.");
         }
     }
     
