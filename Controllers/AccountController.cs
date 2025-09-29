@@ -62,12 +62,18 @@ namespace JuanBosch.App.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login()
         {
+            Console.WriteLine($"=== LOGIN REQUEST START ===");
+            Console.WriteLine($"Content-Type: {Request.ContentType}");
+            Console.WriteLine($"Method: {Request.Method}");
+            Console.WriteLine($"Has Form Content: {Request.HasFormContentType}");
+            
             var model = new LoginModel();
 
             try
             {
                 if (Request.HasFormContentType)
                 {
+                    Console.WriteLine("Processing as form data...");
                     var form = await Request.ReadFormAsync();
                     model.UserName = form["userName"].ToString() ?? form["username"].ToString();
                     if (string.IsNullOrWhiteSpace(model.UserName) && form.ContainsKey("email"))
@@ -75,17 +81,22 @@ namespace JuanBosch.App.Controllers
                         model.UserName = form["email"].ToString();
                     }
                     model.Password = form["password"].ToString();
+                    Console.WriteLine($"Form parsed - UserName: '{model.UserName}', Password length: {model.Password?.Length ?? 0}");
                 }
                 else
                 {
+                    Console.WriteLine("Processing as body content...");
                     using var reader = new StreamReader(Request.Body);
                     var body = await reader.ReadToEndAsync();
+                    Console.WriteLine($"Raw body: {body}");
+                    
                     if (!string.IsNullOrWhiteSpace(body))
                     {
                         var trimmed = body.TrimStart();
-                        var parsed = (LoginModel)null;
+                        var parsed = (LoginModel?)null;
                         if (trimmed.StartsWith("{"))
                         {
+                            Console.WriteLine("Parsing as JSON...");
                             parsed = JsonSerializer.Deserialize<LoginModel>(body, new JsonSerializerOptions
                             {
                                 PropertyNameCaseInsensitive = true
@@ -95,29 +106,35 @@ namespace JuanBosch.App.Controllers
                         if (parsed != null)
                         {
                             model = parsed;
+                            Console.WriteLine($"JSON parsed - UserName: '{model.UserName}', Password length: {model.Password?.Length ?? 0}");
                         }
                         else if (body.Contains("=") && body.Contains("&"))
                         {
+                            Console.WriteLine("Parsing as URL-encoded fallback...");
                             // Fallback: parse URL-encoded-like body even if Content-Type was JSON
                             var query = QueryHelpers.ParseQuery(body.StartsWith("?") ? body : "?" + body);
                             if (query.TryGetValue("userName", out var u1)) model.UserName = u1.ToString();
                             if (string.IsNullOrWhiteSpace(model.UserName) && query.TryGetValue("username", out var u2)) model.UserName = u2.ToString();
                             if (string.IsNullOrWhiteSpace(model.UserName) && query.TryGetValue("email", out var u3)) model.UserName = u3.ToString();
                             if (query.TryGetValue("password", out var p)) model.Password = p.ToString();
+                            Console.WriteLine($"URL-encoded parsed - UserName: '{model.UserName}', Password length: {model.Password?.Length ?? 0}");
                         }
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                Console.WriteLine($"Error parsing request: {ex.Message}");
                 return BadRequest(new { message = "Invalid login payload format." });
             }
 
             if (string.IsNullOrWhiteSpace(model.UserName) || string.IsNullOrWhiteSpace(model.Password))
             {
+                Console.WriteLine($"Missing credentials - UserName: '{model.UserName}', Password: {(string.IsNullOrWhiteSpace(model.Password) ? "EMPTY" : "PROVIDED")}");
                 return BadRequest(new { message = "Missing userName/email or password." });
             }
 
+            Console.WriteLine($"Proceeding to LoginCore with UserName: '{model.UserName}'");
             return await LoginCore(model);
         }
 
