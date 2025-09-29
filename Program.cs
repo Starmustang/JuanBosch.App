@@ -164,7 +164,39 @@ if (app.Environment.IsDevelopment())
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<DataContext>();
-    db.Database.Migrate();
+    
+    // Handle migrations based on environment
+    var environment = app.Environment;
+    
+    if (environment.IsDevelopment())
+    {
+        // In development, always try to migrate
+        db.Database.Migrate();
+    }
+    else
+    {
+        // In production, be more careful with migrations
+        var pendingMigrations = db.Database.GetPendingMigrations();
+        if (pendingMigrations.Any())
+        {
+            Console.WriteLine($"Found {pendingMigrations.Count()} pending migrations.");
+            try
+            {
+                db.Database.Migrate();
+                Console.WriteLine("Migrations applied successfully.");
+            }
+            catch (MySqlConnector.MySqlException ex) when (ex.Message.Contains("already exists"))
+            {
+                Console.WriteLine($"Warning: {ex.Message}");
+                Console.WriteLine("Database tables already exist. This might indicate the migration history is out of sync.");
+                Console.WriteLine("Consider manually updating the __EFMigrationsHistory table.");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Database is up to date.");
+        }
+    }
 
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
