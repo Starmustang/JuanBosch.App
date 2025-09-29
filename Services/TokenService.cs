@@ -58,8 +58,8 @@ namespace JuanBosch.App.Services
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.Now.AddDays(7),
                 SigningCredentials = creds,
-                Issuer = _config["Jwt:Issuer"],
-                Audience = _config["Jwt:Audience"]
+                Issuer = _config["Jwt:Issuer"] ?? "JuanBoschApp",
+                Audience = _config["Jwt:Audience"] ?? "JuanBoschApp"
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
