@@ -13,6 +13,9 @@ namespace JuanBosch.App.Services.Interface
         Task<bool> CheckPasswordAsync(ApplicationUser user, string password);
         Task<IList<string>> GetUserRolesAsync(ApplicationUser user);
         Task<IdentityResult> AddUserToRoleAsync(ApplicationUser user, string roleName);
-        Task<IEnumerable<ApplicationUser>> GetAllUsersAsync();
+        Task<IEnumerable<UserDto>> GetAllUsersAsync();
+        Task<UserDto?> GetUserByIdAsync(string userId);
+        Task<IdentityResult> UpdateUserAsync(string userId, UpdateUserDto updateUserDto);
+        Task<IdentityResult> DeleteUserAsync(string userId);
     }
 }

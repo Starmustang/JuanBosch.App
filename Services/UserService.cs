@@ -18,7 +18,12 @@ namespace JuanBosch.App.Services
 
         public async Task<IdentityResult> RegisterUserAsync(ApplicationUser user, string password)
         {
-            return await _userManager.CreateAsync(user, password);
+            var result = await _userManager.CreateAsync(user, password);
+            if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(user, "usuario");
+            }
+            return result;
         }
 
         public async Task<ApplicationUser?> FindUserByEmailAsync(string email)
@@ -46,9 +51,72 @@ namespace JuanBosch.App.Services
             return await _userManager.AddToRoleAsync(user, roleName);
         }
 
-        public async Task<IEnumerable<ApplicationUser>> GetAllUsersAsync()
+        public async Task<IEnumerable<UserDto>> GetAllUsersAsync()
         {
-            return await _userManager.Users.ToListAsync();
+            var users = await _userManager.Users.ToListAsync();
+            var userDtos = new List<UserDto>();
+            foreach (var user in users)
+            {
+                userDtos.Add(new UserDto
+                {
+                    Id = user.Id,
+                    UserName = user.UserName!,
+                    Email = user.Email!,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Roles = await _userManager.GetRolesAsync(user)
+                });
+            }
+            return userDtos;
+        }
+
+        public async Task<UserDto?> GetUserByIdAsync(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null) return null;
+
+            return new UserDto
+            {
+                Id = user.Id,
+                UserName = user.UserName!,
+                Email = user.Email!,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Roles = await _userManager.GetRolesAsync(user)
+            };
+        }
+
+        public async Task<IdentityResult> UpdateUserAsync(string userId, UpdateUserDto updateUserDto)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null) return IdentityResult.Failed(new IdentityError { Description = "User not found." });
+
+            user.Email = updateUserDto.Email ?? user.Email;
+            user.FirstName = updateUserDto.FirstName ?? user.FirstName;
+            user.LastName = updateUserDto.LastName ?? user.LastName;
+
+            var result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded) return result;
+
+            if (updateUserDto.Roles != null)
+            {
+                var currentRoles = await _userManager.GetRolesAsync(user);
+                var rolesToAdd = updateUserDto.Roles.Except(currentRoles);
+                var rolesToRemove = currentRoles.Except(updateUserDto.Roles);
+
+                await _userManager.AddToRolesAsync(user, rolesToAdd);
+                await _userManager.RemoveFromRolesAsync(user, rolesToRemove);
+            }
+
+            return IdentityResult.Success;
+        }
+
+        public async Task<IdentityResult> DeleteUserAsync(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null) return IdentityResult.Failed(new IdentityError { Description = "User not found." });
+
+            return await _userManager.DeleteAsync(user);
         }
     }
 }
