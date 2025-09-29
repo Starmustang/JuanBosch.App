@@ -21,7 +21,17 @@ namespace JuanBosch.App.Services
         public TokenService(IConfiguration config, UserManager<ApplicationUser> userManager)
         {
             _config = config;
-            _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
+            var key = _config["Jwt:Key"]
+                      ?? Environment.GetEnvironmentVariable("Jwt__Key")
+                      ?? Environment.GetEnvironmentVariable("JWT_KEY");
+
+            if (string.IsNullOrWhiteSpace(key))
+            {
+                Console.WriteLine("WARNING: JWT signing key not configured. Set 'Jwt:Key' or env 'Jwt__Key'/'JWT_KEY'. Using placeholder key.");
+                key = "__MISSING_JWT_KEY__"; // placeholder to avoid null exceptions
+            }
+
+            _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
             _userManager = userManager;
         }
 
@@ -57,8 +67,14 @@ namespace JuanBosch.App.Services
                 }
                 Console.WriteLine($"Total claims: {claims.Count}");
 
-                var issuer = _config["Jwt:Issuer"] ?? "JuanBoschApp";
-                var audience = _config["Jwt:Audience"] ?? "JuanBoschApp";
+                var issuer = _config["Jwt:Issuer"]
+                             ?? Environment.GetEnvironmentVariable("Jwt__Issuer")
+                             ?? Environment.GetEnvironmentVariable("JWT_ISSUER")
+                             ?? "JuanBoschApp";
+                var audience = _config["Jwt:Audience"]
+                               ?? Environment.GetEnvironmentVariable("Jwt__Audience")
+                               ?? Environment.GetEnvironmentVariable("JWT_AUDIENCE")
+                               ?? "JuanBoschApp";
                 Console.WriteLine($"Using Issuer: {issuer}, Audience: {audience}");
 
                 var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);

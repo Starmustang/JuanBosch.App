@@ -28,6 +28,7 @@ using System;
 using JuanBosch.App.Models.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.HttpOverrides;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -50,13 +51,25 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
+// Configure JWT using configuration or environment variables (Production safe)
+var jwtKey = builder.Configuration["Jwt:Key"]
+             ?? Environment.GetEnvironmentVariable("Jwt__Key")
+             ?? Environment.GetEnvironmentVariable("JWT_KEY");
+
+if (string.IsNullOrEmpty(jwtKey))
+{
+    // Warn but continue to avoid startup failure; requests that create tokens will fail if key is missing
+    Console.WriteLine("WARNING: JWT signing key is not configured. Set 'Jwt:Key' or environment variable 'Jwt__Key'/'JWT_KEY'.");
+    jwtKey = "__MISSING_JWT_KEY__"; // placeholder to avoid null exceptions
+}
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)),
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
             ValidateIssuer = false,
             ValidateAudience = false
         };
@@ -101,21 +114,50 @@ string? connectionString = null;
 
 if (builder.Environment.IsProduction())
 {
-    var dbUrl = Environment.GetEnvironmentVariable("MYSQL_URL");
+    // Try URL-style env vars first (common on Railway/Render/Heroku)
+    var dbUrl = Environment.GetEnvironmentVariable("MYSQL_URL")
+                ?? Environment.GetEnvironmentVariable("DATABASE_URL")
+                ?? Environment.GetEnvironmentVariable("JAWSDB_URL")
+                ?? Environment.GetEnvironmentVariable("JAWSDB_MARIA_URL")
+                ?? Environment.GetEnvironmentVariable("CLEARDB_DATABASE_URL");
+
     if (!string.IsNullOrEmpty(dbUrl))
     {
-        var uri = new Uri(dbUrl);
-        var dbHost = uri.Host;
-        var dbPort = uri.Port;
-        var userInfo = uri.UserInfo.Split(':');
-        var dbUser = userInfo[0];
-        var dbPassword = userInfo[1];
-        var dbName = uri.AbsolutePath.Trim('/');
+        try
+        {
+            var uri = new Uri(dbUrl);
+            var dbHost = uri.Host;
+            var dbPort = uri.Port <= 0 ? 3306 : uri.Port;
+            var userInfo = uri.UserInfo.Split(':', 2);
+            var dbUser = Uri.UnescapeDataString(userInfo[0]);
+            var dbPassword = userInfo.Length > 1 ? Uri.UnescapeDataString(userInfo[1]) : string.Empty;
+            var dbName = uri.AbsolutePath.Trim('/');
 
-        connectionString = $"Server={dbHost};Port={dbPort};Database={dbName};User={dbUser};Password={dbPassword};";
+            connectionString = $"Server={dbHost};Port={dbPort};Database={dbName};User={dbUser};Password={dbPassword};SslMode=Preferred;";
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to parse DB URL: {ex.Message}");
+        }
+    }
+
+    // Fallback to discrete Railway-style vars
+    if (string.IsNullOrEmpty(connectionString))
+    {
+        var dbHost = Environment.GetEnvironmentVariable("MYSQLHOST") ?? Environment.GetEnvironmentVariable("MYSQL_HOST");
+        var dbPort = Environment.GetEnvironmentVariable("MYSQLPORT") ?? Environment.GetEnvironmentVariable("MYSQL_PORT") ?? "3306";
+        var dbUser = Environment.GetEnvironmentVariable("MYSQLUSER") ?? Environment.GetEnvironmentVariable("MYSQL_USER");
+        var dbPassword = Environment.GetEnvironmentVariable("MYSQLPASSWORD") ?? Environment.GetEnvironmentVariable("MYSQL_PASSWORD");
+        var dbName = Environment.GetEnvironmentVariable("MYSQLDATABASE") ?? Environment.GetEnvironmentVariable("MYSQL_DATABASE");
+
+        if (!string.IsNullOrEmpty(dbHost) && !string.IsNullOrEmpty(dbUser) && !string.IsNullOrEmpty(dbName))
+        {
+            connectionString = $"Server={dbHost};Port={dbPort};Database={dbName};User={dbUser};Password={dbPassword};SslMode=Preferred;";
+        }
     }
 }
-else
+
+if (string.IsNullOrEmpty(connectionString))
 {
     connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 }
@@ -145,10 +187,8 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-// Log the connection string for debugging.
-// WARNING: This may log sensitive information. Remove this in a production environment once the issue is resolved.
 var logger = app.Services.GetRequiredService<ILogger<Program>>();
-logger.LogInformation("Using connection string: {ConnectionString}", connectionString);
+logger.LogInformation("Environment: {Env}. DB configured: {DbConfigured}", app.Environment.EnvironmentName, !string.IsNullOrEmpty(connectionString));
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -297,6 +337,12 @@ using (var scope = app.Services.CreateScope())
         Console.WriteLine("Skipping database seeding due to migration issues.");
     }
 }
+
+// Respect X-Forwarded-* headers (Railway proxy) before HTTPS redirection
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+});
 
 app.UseHttpsRedirection();
 
