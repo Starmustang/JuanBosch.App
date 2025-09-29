@@ -31,7 +31,9 @@ namespace JuanBosch.App.Services
                 key = "__MISSING_JWT_KEY__"; // placeholder to avoid null exceptions
             }
 
-            _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
+            var keyBytes = Encoding.UTF8.GetBytes(key);
+            Console.WriteLine($"JWT key length (bytes): {keyBytes.Length}");
+            _key = new SymmetricSecurityKey(keyBytes);
             _userManager = userManager;
         }
 
@@ -77,7 +79,7 @@ namespace JuanBosch.App.Services
                                ?? "JuanBoschApp";
                 Console.WriteLine($"Using Issuer: {issuer}, Audience: {audience}");
 
-                var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
+                var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha256Signature);
 
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {

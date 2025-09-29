@@ -127,7 +127,10 @@ namespace JuanBosch.App.Controllers
             {
                 var traceId = HttpContext.TraceIdentifier;
                 Console.WriteLine($"Error parsing request [TraceId={traceId}]: {ex.Message}\n{ex.StackTrace}");
-                var showDetails = Environment.GetEnvironmentVariable("EXPOSE_DETAILED_ERRORS") == "true";
+                var expose = Environment.GetEnvironmentVariable("EXPOSE_DETAILED_ERRORS");
+                var showDetails = string.Equals(expose, "true", StringComparison.OrdinalIgnoreCase)
+                                  || string.Equals(expose, "1", StringComparison.OrdinalIgnoreCase)
+                                  || string.Equals(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), "Development", StringComparison.OrdinalIgnoreCase);
                 if (showDetails)
                 {
                     return BadRequest(new { message = "Invalid login payload format.", traceId, error = ex.Message, stack = ex.StackTrace });
@@ -184,7 +187,10 @@ namespace JuanBosch.App.Controllers
             {
                 var traceId = HttpContext.TraceIdentifier;
                 Console.WriteLine($"Login error [TraceId={traceId}]: {ex.Message}\n{ex.StackTrace}");
-                var showDetails = Environment.GetEnvironmentVariable("EXPOSE_DETAILED_ERRORS") == "true";
+                var expose = Environment.GetEnvironmentVariable("EXPOSE_DETAILED_ERRORS");
+                var showDetails = string.Equals(expose, "true", StringComparison.OrdinalIgnoreCase)
+                                  || string.Equals(expose, "1", StringComparison.OrdinalIgnoreCase)
+                                  || string.Equals(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), "Development", StringComparison.OrdinalIgnoreCase);
                 if (showDetails)
                 {
                     return StatusCode(500, new
