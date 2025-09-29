@@ -3,7 +3,10 @@ using JuanBosch.App.Services.Interface;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.IO;
+using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace JuanBosch.App.Controllers
 {
@@ -52,19 +55,69 @@ namespace JuanBosch.App.Controllers
             return BadRequest(ModelState);
         }
 
-        // Accept JSON payloads
+        // Unified login to support both JSON and x-www-form-urlencoded payloads
         [AllowAnonymous]
         [HttpPost("login")]
-        [Consumes("application/json")]
-        public async Task<IActionResult> LoginJson([FromBody] LoginModel model)
-            => await LoginCore(model);
+        public async Task<IActionResult> Login()
+        {
+            var model = new LoginModel();
 
-        // Accept x-www-form-urlencoded payloads (e.g., NextAuth Credentials provider)
-        [AllowAnonymous]
-        [HttpPost("login")]
-        [Consumes("application/x-www-form-urlencoded")]
-        public async Task<IActionResult> LoginForm([FromForm] LoginModel model)
-            => await LoginCore(model);
+            try
+            {
+                if (Request.HasFormContentType)
+                {
+                    var form = await Request.ReadFormAsync();
+                    model.UserName = form["userName"].ToString() ?? form["username"].ToString();
+                    if (string.IsNullOrWhiteSpace(model.UserName) && form.ContainsKey("email"))
+                    {
+                        model.UserName = form["email"].ToString();
+                    }
+                    model.Password = form["password"].ToString();
+                }
+                else
+                {
+                    using var reader = new StreamReader(Request.Body);
+                    var body = await reader.ReadToEndAsync();
+                    if (!string.IsNullOrWhiteSpace(body))
+                    {
+                        var trimmed = body.TrimStart();
+                        var parsed = (LoginModel)null;
+                        if (trimmed.StartsWith("{"))
+                        {
+                            parsed = JsonSerializer.Deserialize<LoginModel>(body, new JsonSerializerOptions
+                            {
+                                PropertyNameCaseInsensitive = true
+                            });
+                        }
+
+                        if (parsed != null)
+                        {
+                            model = parsed;
+                        }
+                        else if (body.Contains("=") && body.Contains("&"))
+                        {
+                            // Fallback: parse URL-encoded-like body even if Content-Type was JSON
+                            var query = QueryHelpers.ParseQuery(body.StartsWith("?") ? body : "?" + body);
+                            if (query.TryGetValue("userName", out var u1)) model.UserName = u1.ToString();
+                            if (string.IsNullOrWhiteSpace(model.UserName) && query.TryGetValue("username", out var u2)) model.UserName = u2.ToString();
+                            if (string.IsNullOrWhiteSpace(model.UserName) && query.TryGetValue("email", out var u3)) model.UserName = u3.ToString();
+                            if (query.TryGetValue("password", out var p)) model.Password = p.ToString();
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                return BadRequest(new { message = "Invalid login payload format." });
+            }
+
+            if (string.IsNullOrWhiteSpace(model.UserName) || string.IsNullOrWhiteSpace(model.Password))
+            {
+                return BadRequest(new { message = "Missing userName/email or password." });
+            }
+
+            return await LoginCore(model);
+        }
 
         private async Task<IActionResult> LoginCore(LoginModel model)
         {
