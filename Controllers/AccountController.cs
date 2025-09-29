@@ -8,6 +8,7 @@ using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Hosting;
 
 namespace JuanBosch.App.Controllers
 {
@@ -124,8 +125,14 @@ namespace JuanBosch.App.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error parsing request: {ex.Message}");
-                return BadRequest(new { message = "Invalid login payload format." });
+                var traceId = HttpContext.TraceIdentifier;
+                Console.WriteLine($"Error parsing request [TraceId={traceId}]: {ex.Message}\n{ex.StackTrace}");
+                var showDetails = Environment.GetEnvironmentVariable("EXPOSE_DETAILED_ERRORS") == "true";
+                if (showDetails)
+                {
+                    return BadRequest(new { message = "Invalid login payload format.", traceId, error = ex.Message, stack = ex.StackTrace });
+                }
+                return BadRequest(new { message = "Invalid login payload format.", traceId });
             }
 
             if (string.IsNullOrWhiteSpace(model.UserName) || string.IsNullOrWhiteSpace(model.Password))
@@ -175,8 +182,21 @@ namespace JuanBosch.App.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Login error: {ex.Message}\n{ex.StackTrace}");
-                return StatusCode(500, new { message = "Login failed due to a server error." });
+                var traceId = HttpContext.TraceIdentifier;
+                Console.WriteLine($"Login error [TraceId={traceId}]: {ex.Message}\n{ex.StackTrace}");
+                var showDetails = Environment.GetEnvironmentVariable("EXPOSE_DETAILED_ERRORS") == "true";
+                if (showDetails)
+                {
+                    return StatusCode(500, new
+                    {
+                        message = "Login failed due to a server error.",
+                        traceId,
+                        error = ex.Message,
+                        stack = ex.StackTrace,
+                        inner = ex.InnerException?.Message
+                    });
+                }
+                return StatusCode(500, new { message = "Login failed due to a server error.", traceId });
             }
         }
     }
