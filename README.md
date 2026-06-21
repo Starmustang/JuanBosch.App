@@ -63,6 +63,19 @@ The API will start and auto-migrate the database on launch. Default URLs:
 - **API:** `http://localhost:5028`
 - **Swagger UI (development):** `https://localhost:7229` or `http://localhost:5028`
 
+### 5. Default User
+
+The database is automatically seeded with an admin user for immediate testing:
+
+| Field    | Value                 |
+|----------|-----------------------|
+| Username | `admin`               |
+| Password | `123456789wW#`        |
+| Email    | `admin@juanbosch.com` |
+| Role     | `Administrador`       |
+
+Use these credentials to log in via the `/api/auth/login` endpoint or through Swagger UI.
+
 ---
 
 ## Project Structure
