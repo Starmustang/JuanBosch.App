@@ -139,4 +139,4 @@ The Dockerfile exposes ports `8080` and `8081`.
 
 ## License
 
-[Specify your license here]
+MIT License
