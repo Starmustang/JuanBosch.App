@@ -2,6 +2,8 @@
 
 ASP.NET Core 9 Web API for the Hospital Juan Bosch application. Provides endpoints for managing patients, doctors, medical records, appointments, addresses, ARS insurance, and user authentication.
 
+> **Frontend app:** The companion UI is available at [github.com/Starmustang/JuanBoschHospital.UI](https://github.com/Starmustang/JuanBoschHospital.UI.git).
+
 ---
 
 ## Requirements
@@ -75,6 +77,20 @@ The database is automatically seeded with an admin user for immediate testing:
 | Role     | `Administrador`       |
 
 Use these credentials to log in via the `/api/auth/login` endpoint or through Swagger UI.
+
+### 6. Sample Data
+
+On first run, the database is automatically seeded with realistic sample data so the API can be explored immediately:
+
+- **Countries / Provinces / Municipalities / Sectors** — Dominican Republic address hierarchy
+- **Blood Types** — A+, A-, B+, B-, AB+, AB-, O+, O-
+- **ARS Insurance** — SENASA, HUMANO, SEMA with one plan each
+- **Doctors** — 2 doctors (Medicina General, Cardiología)
+- **Patients** — 2 patients with addresses and assigned ARS plans
+- **Medical Records** — one record per patient linked to the first doctor
+- **Patient-Doctor Relationships** — both patients linked to the doctor
+
+To reseed from scratch, set `FORCE_DB_RESET=true` before starting the application. This will delete and recreate the database, then reapply migrations and seed data.
 
 ---
 

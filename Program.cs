@@ -325,6 +325,7 @@ using (var scope = app.Services.CreateScope())
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
             await Seed.SeedUsers(userManager, roleManager);
+            await Seed.SeedData(db);
             Console.WriteLine("Database seeding completed successfully.");
         }
         catch (Exception seedEx)
